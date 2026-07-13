@@ -1,5 +1,6 @@
 // ======================================================
 // Live Flip Clock
+// Author: Arisudan
 // ======================================================
 
 // -----------------------------
@@ -22,7 +23,7 @@ const themeButtons = document.querySelectorAll(".theme-btn");
 
 function setTheme(themeName) {
 
-    // Remove existing theme classes
+    // Remove old themes
     document.body.classList.remove(
         "theme-dark",
         "theme-light",
@@ -30,11 +31,13 @@ function setTheme(themeName) {
         "theme-sakura"
     );
 
-    // Add selected theme
+    // Apply new theme
     document.body.classList.add(themeName);
 
     // Highlight active button
-    themeButtons.forEach(btn => btn.classList.remove("active"));
+    themeButtons.forEach(button =>
+        button.classList.remove("active")
+    );
 
     const activeButton = document.querySelector(
         `[data-theme="${themeName}"]`
@@ -49,10 +52,10 @@ function setTheme(themeName) {
 }
 
 // -----------------------------
-// Flip Card Update
+// Flip Card Animation
 // -----------------------------
 
-function updateCard(cardId, newValue) {
+function updateCard(cardId, value) {
 
     const card = document.getElementById(cardId);
 
@@ -63,23 +66,22 @@ function updateCard(cardId, newValue) {
 
     if (!top || !bottom) return;
 
-    const currentValue = top.textContent;
+    if (top.textContent === value) return;
 
-    if (currentValue === newValue) return;
-
-    // Restart animation
     card.classList.remove("animate");
 
+    // Restart animation
     void card.offsetWidth;
 
-    top.textContent = newValue;
-    bottom.textContent = newValue;
+    top.textContent = value;
+    bottom.textContent = value;
 
     card.classList.add("animate");
+
 }
 
 // -----------------------------
-// Clock Logic
+// Update Clock
 // -----------------------------
 
 function runClock() {
@@ -95,8 +97,8 @@ function runClock() {
 
         const period = hours >= 12 ? "PM" : "AM";
 
+        ampmIndicator.style.display = "flex";
         ampmIndicator.textContent = period;
-        ampmIndicator.style.display = "block";
 
         hours = hours % 12 || 12;
 
@@ -116,27 +118,42 @@ function runClock() {
 
     updateCard("seconds-tensor", seconds[0]);
     updateCard("seconds-unit", seconds[1]);
+
 }
 
 // -----------------------------
-// Accurate Timer
+// Accurate Clock Scheduler
 // -----------------------------
 
-function startClock() {
+function scheduleClock() {
 
     runClock();
 
     const delay = 1000 - (Date.now() % 1000);
 
-    setTimeout(startClock, delay);
+    setTimeout(scheduleClock, delay);
 
 }
 
 // -----------------------------
-// Event Listeners
+// Theme Button Events
 // -----------------------------
 
-formatToggle.addEventListener("change", (event) => {
+themeButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        setTheme(button.dataset.theme);
+
+    });
+
+});
+
+// -----------------------------
+// Format Toggle
+// -----------------------------
+
+formatToggle.addEventListener("change", event => {
 
     is12HourFormat = event.target.checked;
 
@@ -149,47 +166,47 @@ formatToggle.addEventListener("change", (event) => {
 
 });
 
-themeButtons.forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        const theme = button.dataset.theme;
-
-        setTheme(theme);
-
-    });
-
-});
-
 // -----------------------------
-// Load Saved Preferences
+// Load User Preferences
 // -----------------------------
 
-function initializeClock() {
+function loadPreferences() {
 
     // Theme
     const savedTheme =
-        localStorage.getItem("clock-theme") || "theme-dark";
+        localStorage.getItem("clock-theme") ||
+        "theme-dark";
 
     setTheme(savedTheme);
 
-    // Time Format
+    // Clock Format
     const savedFormat =
-        JSON.parse(localStorage.getItem("clock-format"));
+        JSON.parse(
+            localStorage.getItem("clock-format")
+        );
 
     if (savedFormat !== null) {
 
         is12HourFormat = savedFormat;
+
         formatToggle.checked = savedFormat;
 
     }
 
-    startClock();
-
 }
 
 // -----------------------------
-// Start
+// Initialize
 // -----------------------------
+
+function initializeClock() {
+
+    loadPreferences();
+
+    scheduleClock();
+
+}
+
+// Start Application
 
 initializeClock();
