@@ -1,68 +1,195 @@
+// ======================================================
+// Live Flip Clock
+// ======================================================
+
+// -----------------------------
+// Application State
+// -----------------------------
+
 let is12HourFormat = false;
 
-// 1. Theme Switcher Engine
+// -----------------------------
+// DOM Elements
+// -----------------------------
+
+const formatToggle = document.getElementById("format-toggle");
+const ampmIndicator = document.getElementById("ampm-indicator");
+const themeButtons = document.querySelectorAll(".theme-btn");
+
+// -----------------------------
+// Theme Engine
+// -----------------------------
+
 function setTheme(themeName) {
-  document.body.className = themeName;
-  
-  // Update active state class handles across custom selectors
-  document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
-  const activeBtn = document.querySelector(`.btn-${themeName.replace('theme-', '')}`);
-  if (activeBtn) activeBtn.classList.add('active');
+
+    // Remove existing theme classes
+    document.body.classList.remove(
+        "theme-dark",
+        "theme-light",
+        "theme-sage",
+        "theme-sakura"
+    );
+
+    // Add selected theme
+    document.body.classList.add(themeName);
+
+    // Highlight active button
+    themeButtons.forEach(btn => btn.classList.remove("active"));
+
+    const activeButton = document.querySelector(
+        `[data-theme="${themeName}"]`
+    );
+
+    if (activeButton) {
+        activeButton.classList.add("active");
+    }
+
+    // Save preference
+    localStorage.setItem("clock-theme", themeName);
 }
 
-// 2. Element DOM Flip Injector logic
+// -----------------------------
+// Flip Card Update
+// -----------------------------
+
 function updateCard(cardId, newValue) {
-  const card = document.getElementById(cardId);
-  const topSegment = card.querySelector('.top');
-  const bottomSegment = card.querySelector('.bottom');
-  const currentValue = topSegment.innerText;
-  
-  if (currentValue === newValue) return;
 
-  card.classList.remove('animate');
-  void card.offsetWidth; // Force CSS layout recalculation reflow
-  
-  topSegment.innerText = newValue;
-  bottomSegment.innerText = newValue;
-  card.classList.add('animate');
+    const card = document.getElementById(cardId);
+
+    if (!card) return;
+
+    const top = card.querySelector(".top");
+    const bottom = card.querySelector(".bottom");
+
+    if (!top || !bottom) return;
+
+    const currentValue = top.textContent;
+
+    if (currentValue === newValue) return;
+
+    // Restart animation
+    card.classList.remove("animate");
+
+    void card.offsetWidth;
+
+    top.textContent = newValue;
+    bottom.textContent = newValue;
+
+    card.classList.add("animate");
 }
 
-// 3. Central System Clock Core Loop
+// -----------------------------
+// Clock Logic
+// -----------------------------
+
 function runClock() {
-  const now = new Date();
-  let hours = now.getHours();
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const seconds = String(now.getSeconds()).padStart(2, '0');
-  
-  const ampmIndicator = document.getElementById('ampm-indicator');
 
-  if (is12HourFormat) {
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    ampmIndicator.innerText = ampm;
-    ampmIndicator.style.display = 'block';
-    
-    hours = hours % 12;
-    hours = hours ? hours : 12; // Handle structural '0' hour edge evaluation down to 12
-  } else {
-    ampmIndicator.style.display = 'none';
-  }
+    const now = new Date();
 
-  const hoursStr = String(hours).padStart(2, '0');
+    let hours = now.getHours();
 
-  // Push updates slice by slice down to dual-digit targets
-  updateCard('hours-tensor', hoursStr[0]);
-  updateCard('hours-unit', hoursStr[1]);
-  updateCard('minutes-tensor', minutes[0]);
-  updateCard('minutes-unit', minutes[1]);
-  updateCard('seconds-tensor', seconds[0]);
-  updateCard('seconds-unit', seconds[1]);
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const seconds = String(now.getSeconds()).padStart(2, "0");
+
+    if (is12HourFormat) {
+
+        const period = hours >= 12 ? "PM" : "AM";
+
+        ampmIndicator.textContent = period;
+        ampmIndicator.style.display = "block";
+
+        hours = hours % 12 || 12;
+
+    } else {
+
+        ampmIndicator.style.display = "none";
+
+    }
+
+    const hourString = String(hours).padStart(2, "0");
+
+    updateCard("hours-tensor", hourString[0]);
+    updateCard("hours-unit", hourString[1]);
+
+    updateCard("minutes-tensor", minutes[0]);
+    updateCard("minutes-unit", minutes[1]);
+
+    updateCard("seconds-tensor", seconds[0]);
+    updateCard("seconds-unit", seconds[1]);
 }
 
-// 4. Input Listener Initializations
-document.getElementById('format-toggle').addEventListener('change', (e) => {
-  is12HourFormat = e.target.checked;
-  runClock(); // Refresh instantly without waiting next second layout pass
+// -----------------------------
+// Accurate Timer
+// -----------------------------
+
+function startClock() {
+
+    runClock();
+
+    const delay = 1000 - (Date.now() % 1000);
+
+    setTimeout(startClock, delay);
+
+}
+
+// -----------------------------
+// Event Listeners
+// -----------------------------
+
+formatToggle.addEventListener("change", (event) => {
+
+    is12HourFormat = event.target.checked;
+
+    localStorage.setItem(
+        "clock-format",
+        JSON.stringify(is12HourFormat)
+    );
+
+    runClock();
+
 });
 
-setInterval(runClock, 1000);
-runClock();
+themeButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const theme = button.dataset.theme;
+
+        setTheme(theme);
+
+    });
+
+});
+
+// -----------------------------
+// Load Saved Preferences
+// -----------------------------
+
+function initializeClock() {
+
+    // Theme
+    const savedTheme =
+        localStorage.getItem("clock-theme") || "theme-dark";
+
+    setTheme(savedTheme);
+
+    // Time Format
+    const savedFormat =
+        JSON.parse(localStorage.getItem("clock-format"));
+
+    if (savedFormat !== null) {
+
+        is12HourFormat = savedFormat;
+        formatToggle.checked = savedFormat;
+
+    }
+
+    startClock();
+
+}
+
+// -----------------------------
+// Start
+// -----------------------------
+
+initializeClock();
