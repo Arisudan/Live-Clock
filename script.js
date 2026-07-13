@@ -1,212 +1,863 @@
-// ======================================================
-// Live Flip Clock
-// Author: Arisudan
-// ======================================================
+/* ==========================================================
+   Live Flip Clock
+   Author : Arisudan
+   ========================================================== */
 
-// -----------------------------
-// Application State
-// -----------------------------
+/* ==========================================================
+   APPLICATION STATE
+   ========================================================== */
 
-let is12HourFormat = false;
+const App = {
 
-// -----------------------------
-// DOM Elements
-// -----------------------------
+    is12Hour: false,
 
-const formatToggle = document.getElementById("format-toggle");
-const ampmIndicator = document.getElementById("ampm-indicator");
-const themeButtons = document.querySelectorAll(".theme-btn");
+    currentTheme: "theme-dark",
 
-// -----------------------------
-// Theme Engine
-// -----------------------------
+    initialized: false
 
-function setTheme(themeName) {
+};
 
-    // Remove old themes
-    document.body.classList.remove(
-        "theme-dark",
-        "theme-light",
-        "theme-sage",
-        "theme-sakura"
-    );
+/* ==========================================================
+   DOM CACHE
+   ========================================================== */
 
-    // Apply new theme
-    document.body.classList.add(themeName);
+const DOM = {
 
-    // Highlight active button
-    themeButtons.forEach(button =>
-        button.classList.remove("active")
-    );
+    body: document.body,
 
-    const activeButton = document.querySelector(
-        `[data-theme="${themeName}"]`
-    );
+    formatToggle: document.getElementById("format-toggle"),
 
-    if (activeButton) {
-        activeButton.classList.add("active");
+    ampm: document.getElementById("ampm-indicator"),
+
+    themeButtons: document.querySelectorAll(".theme-btn"),
+
+    cards: {
+
+        hoursTens: document.getElementById("hours-tensor"),
+
+        hoursUnits: document.getElementById("hours-unit"),
+
+        minutesTens: document.getElementById("minutes-tensor"),
+
+        minutesUnits: document.getElementById("minutes-unit"),
+
+        secondsTens: document.getElementById("seconds-tensor"),
+
+        secondsUnits: document.getElementById("seconds-unit")
+
     }
 
-    // Save preference
-    localStorage.setItem("clock-theme", themeName);
-}
+};
 
-// -----------------------------
-// Flip Card Animation
-// -----------------------------
+/* ==========================================================
+   STORAGE KEYS
+   ========================================================== */
 
-function updateCard(cardId, value) {
+const STORAGE = {
 
-    const card = document.getElementById(cardId);
+    THEME: "flip-clock-theme",
 
-    if (!card) return;
+    FORMAT: "flip-clock-format"
 
-    const top = card.querySelector(".top");
-    const bottom = card.querySelector(".bottom");
+};
 
-    if (!top || !bottom) return;
+/* ==========================================================
+   UTILITIES
+   ========================================================== */
 
-    if (top.textContent === value) return;
+function saveSetting(key, value){
 
-    card.classList.remove("animate");
+    localStorage.setItem(
 
-    // Restart animation
-    void card.offsetWidth;
+        key,
 
-    top.textContent = value;
-    bottom.textContent = value;
+        JSON.stringify(value)
 
-    card.classList.add("animate");
+    );
 
 }
 
-// -----------------------------
-// Update Clock
-// -----------------------------
+function loadSetting(key, fallback){
 
-function runClock() {
+    const value = localStorage.getItem(key);
+
+    if(value === null){
+
+        return fallback;
+
+    }
+
+    try{
+
+        return JSON.parse(value);
+
+    }
+
+    catch{
+
+        return fallback;
+
+    }
+
+}
+
+/* ==========================================================
+   THEME ENGINE
+   ========================================================== */
+
+function clearThemes(){
+
+    DOM.body.classList.remove(
+
+        "theme-dark",
+
+        "theme-light",
+
+        "theme-sage",
+
+        "theme-sakura"
+
+    );
+
+}
+
+function activateThemeButton(theme){
+
+    DOM.themeButtons.forEach(button=>{
+
+        button.classList.remove("active");
+
+    });
+
+    const activeButton=document.querySelector(
+
+        `[data-theme="${theme}"]`
+
+    );
+
+    if(activeButton){
+
+        activeButton.classList.add("active");
+
+    }
+
+}
+
+function setTheme(theme){
+
+    clearThemes();
+
+    DOM.body.classList.add(theme);
+
+    activateThemeButton(theme);
+
+    App.currentTheme=theme;
+
+    saveSetting(
+
+        STORAGE.THEME,
+
+        theme
+
+    );
+
+}
+
+/* ==========================================================
+   FORMAT ENGINE
+   ========================================================== */
+
+function setTimeFormat(is12Hour){
+
+    App.is12Hour=is12Hour;
+
+    DOM.formatToggle.checked=is12Hour;
+
+    saveSetting(
+
+        STORAGE.FORMAT,
+
+        is12Hour
+
+    );
+
+}
+
+/* ==========================================================
+   LOAD USER SETTINGS
+   ========================================================== */
+
+function loadUserPreferences(){
+
+    const savedTheme=
+
+        loadSetting(
+
+            STORAGE.THEME,
+
+            "theme-dark"
+
+        );
+
+    const savedFormat=
+
+        loadSetting(
+
+            STORAGE.FORMAT,
+
+            false
+
+        );
+
+    setTheme(savedTheme);
+
+    setTimeFormat(savedFormat);
+
+}
+
+/* ==========================================================
+   EVENT REGISTRATION
+   ========================================================== */
+
+function registerThemeButtons(){
+
+    DOM.themeButtons.forEach(button=>{
+
+        button.addEventListener(
+
+            "click",
+
+            ()=>{
+
+                setTheme(
+
+                    button.dataset.theme
+
+                );
+
+            }
+
+        );
+
+    });
+
+}
+
+function registerFormatToggle(){
+
+    DOM.formatToggle.addEventListener(
+
+        "change",
+
+        event=>{
+
+            setTimeFormat(
+
+                event.target.checked
+
+            );
+
+            updateClock();
+
+        }
+
+    );
+
+}
+/* ==========================================================
+   CLOCK ENGINE
+========================================================== */
+
+function getCurrentTime(){
 
     const now = new Date();
 
     let hours = now.getHours();
 
-    const minutes = String(now.getMinutes()).padStart(2, "0");
-    const seconds = String(now.getSeconds()).padStart(2, "0");
+    let period = "";
 
-    if (is12HourFormat) {
+    if(App.is12Hour){
 
-        const period = hours >= 12 ? "PM" : "AM";
+        period = hours >= 12 ? "PM" : "AM";
 
-        ampmIndicator.style.display = "flex";
-        ampmIndicator.textContent = period;
+        hours = hours % 12;
 
-        hours = hours % 12 || 12;
+        hours = hours || 12;
+
+    }
+
+    return{
+
+        hours:String(hours).padStart(2,"0"),
+
+        minutes:String(now.getMinutes()).padStart(2,"0"),
+
+        seconds:String(now.getSeconds()).padStart(2,"0"),
+
+        period
+
+    };
+
+}
+
+/* ==========================================================
+   UPDATE AM / PM
+========================================================== */
+
+function updatePeriod(period){
+
+    if(App.is12Hour){
+
+        DOM.ampm.classList.add("show");
+
+        DOM.ampm.textContent = period;
+
+    }
+
+    else{
+
+        DOM.ampm.classList.remove("show");
+
+    }
+
+}
+
+/* ==========================================================
+   GET DIGIT
+========================================================== */
+
+function getDigit(card){
+
+    return card.querySelector(".top").textContent;
+
+}
+
+/* ==========================================================
+   SET DIGIT
+========================================================== */
+
+function setDigit(card,value){
+
+    card.querySelector(".top").textContent=value;
+
+    card.querySelector(".bottom").textContent=value;
+
+}
+
+/* ==========================================================
+   FLIP CARD
+========================================================== */
+
+function flipCard(card,newValue){
+
+    const current=getDigit(card);
+
+    if(current===newValue){
+
+        return;
+
+    }
+
+    card.classList.remove("animate");
+
+    void card.offsetWidth;
+
+    setDigit(card,newValue);
+
+    card.classList.add("animate");
+
+}
+
+/* ==========================================================
+   UPDATE HOURS
+========================================================== */
+
+function updateHours(value){
+
+    flipCard(
+
+        DOM.cards.hoursTens,
+
+        value[0]
+
+    );
+
+    flipCard(
+
+        DOM.cards.hoursUnits,
+
+        value[1]
+
+    );
+
+}
+
+/* ==========================================================
+   UPDATE MINUTES
+========================================================== */
+
+function updateMinutes(value){
+
+    flipCard(
+
+        DOM.cards.minutesTens,
+
+        value[0]
+
+    );
+
+    flipCard(
+
+        DOM.cards.minutesUnits,
+
+        value[1]
+
+    );
+
+}
+
+/* ==========================================================
+   UPDATE SECONDS
+========================================================== */
+
+function updateSeconds(value){
+
+    flipCard(
+
+        DOM.cards.secondsTens,
+
+        value[0]
+
+    );
+
+    flipCard(
+
+        DOM.cards.secondsUnits,
+
+        value[1]
+
+    );
+
+}
+
+/* ==========================================================
+   UPDATE CLOCK
+========================================================== */
+
+function updateClock(){
+
+    const time=getCurrentTime();
+
+    updateHours(
+
+        time.hours
+
+    );
+
+    updateMinutes(
+
+        time.minutes
+
+    );
+
+    updateSeconds(
+
+        time.seconds
+
+    );
+
+    updatePeriod(
+
+        time.period
+
+    );
+
+}
+/* ==========================================================
+   HIGH PRECISION CLOCK SCHEDULER
+========================================================== */
+
+let clockTimer = null;
+
+function scheduleNextTick() {
+
+    const now = Date.now();
+
+    const delay = 1000 - (now % 1000);
+
+    clockTimer = setTimeout(() => {
+
+        updateClock();
+
+        scheduleNextTick();
+
+    }, delay);
+
+}
+
+/* ==========================================================
+   START CLOCK
+========================================================== */
+
+function startClock() {
+
+    if (clockTimer) {
+
+        clearTimeout(clockTimer);
+
+    }
+
+    updateClock();
+
+    scheduleNextTick();
+
+}
+
+/* ==========================================================
+   STOP CLOCK
+========================================================== */
+
+function stopClock() {
+
+    if (clockTimer) {
+
+        clearTimeout(clockTimer);
+
+        clockTimer = null;
+
+    }
+
+}
+
+/* ==========================================================
+   PAGE VISIBILITY
+========================================================== */
+
+function handleVisibilityChange() {
+
+    if (document.hidden) {
+
+        stopClock();
 
     } else {
 
-        ampmIndicator.style.display = "none";
+        startClock();
 
     }
 
-    const hourString = String(hours).padStart(2, "0");
-
-    updateCard("hours-tensor", hourString[0]);
-    updateCard("hours-unit", hourString[1]);
-
-    updateCard("minutes-tensor", minutes[0]);
-    updateCard("minutes-unit", minutes[1]);
-
-    updateCard("seconds-tensor", seconds[0]);
-    updateCard("seconds-unit", seconds[1]);
-
 }
 
-// -----------------------------
-// Accurate Clock Scheduler
-// -----------------------------
+/* ==========================================================
+   REMOVE ANIMATION CLASS
+========================================================== */
 
-function scheduleClock() {
+function registerAnimationCleanup() {
 
-    runClock();
+    Object.values(DOM.cards).forEach(card => {
 
-    const delay = 1000 - (Date.now() % 1000);
+        card.addEventListener("animationend", () => {
 
-    setTimeout(scheduleClock, delay);
+            card.classList.remove("animate");
 
-}
-
-// -----------------------------
-// Theme Button Events
-// -----------------------------
-
-themeButtons.forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        setTheme(button.dataset.theme);
+        });
 
     });
 
-});
+}
 
-// -----------------------------
-// Format Toggle
-// -----------------------------
+/* ==========================================================
+   KEYBOARD SHORTCUTS
+========================================================== */
 
-formatToggle.addEventListener("change", event => {
+function registerKeyboardShortcuts() {
 
-    is12HourFormat = event.target.checked;
+    document.addEventListener("keydown", event => {
 
-    localStorage.setItem(
-        "clock-format",
-        JSON.stringify(is12HourFormat)
+        switch (event.key.toLowerCase()) {
+
+            case "t":
+
+                DOM.formatToggle.click();
+
+                break;
+
+            case "1":
+
+                setTheme("theme-dark");
+
+                break;
+
+            case "2":
+
+                setTheme("theme-light");
+
+                break;
+
+            case "3":
+
+                setTheme("theme-sage");
+
+                break;
+
+            case "4":
+
+                setTheme("theme-sakura");
+
+                break;
+
+            default:
+
+                break;
+
+        }
+
+    });
+
+}
+
+/* ==========================================================
+   REGISTER EVENTS
+========================================================== */
+
+function registerEvents() {
+
+    registerThemeButtons();
+
+    registerFormatToggle();
+
+    registerAnimationCleanup();
+
+    registerKeyboardShortcuts();
+
+    document.addEventListener(
+
+        "visibilitychange",
+
+        handleVisibilityChange
+
     );
 
-    runClock();
+}
 
-});
+/* ==========================================================
+   PERFORMANCE
+========================================================== */
 
-// -----------------------------
-// Load User Preferences
-// -----------------------------
+function warmUpClock() {
 
-function loadPreferences() {
+    requestAnimationFrame(() => {
 
-    // Theme
-    const savedTheme =
-        localStorage.getItem("clock-theme") ||
-        "theme-dark";
+        updateClock();
 
-    setTheme(savedTheme);
+    });
 
-    // Clock Format
-    const savedFormat =
-        JSON.parse(
-            localStorage.getItem("clock-format")
+}
+
+/* ==========================================================
+   STARTUP CHECK
+========================================================== */
+
+function verifyDOM() {
+
+    if (!DOM.formatToggle) {
+
+        console.error("Format toggle not found.");
+
+        return false;
+
+    }
+
+    if (!DOM.ampm) {
+
+        console.error("AM/PM indicator not found.");
+
+        return false;
+
+    }
+
+    for (const key in DOM.cards) {
+
+        if (!DOM.cards[key]) {
+
+            console.error(`Missing clock card: ${key}`);
+
+            return false;
+
+        }
+
+    }
+
+    return true;
+
+}
+/* ==========================================================
+   INITIALIZE APPLICATION
+========================================================== */
+
+function initialize() {
+
+    // Prevent double initialization
+    if (App.initialized) {
+
+        return;
+
+    }
+
+    // Verify required DOM elements
+    if (!verifyDOM()) {
+
+        console.error("Clock initialization failed.");
+
+        return;
+
+    }
+
+    // Load saved user settings
+    loadUserPreferences();
+
+    // Register all event listeners
+    registerEvents();
+
+    // Warm up UI
+    warmUpClock();
+
+    // Start clock
+    startClock();
+
+    App.initialized = true;
+
+    console.log("Live Flip Clock Initialized Successfully");
+
+}
+
+/* ==========================================================
+   SELF TEST
+========================================================== */
+
+function selfTest() {
+
+    const tests = [
+
+        DOM.formatToggle,
+
+        DOM.ampm,
+
+        DOM.cards.hoursTens,
+
+        DOM.cards.hoursUnits,
+
+        DOM.cards.minutesTens,
+
+        DOM.cards.minutesUnits,
+
+        DOM.cards.secondsTens,
+
+        DOM.cards.secondsUnits
+
+    ];
+
+    const passed = tests.every(item => item !== null);
+
+    if (passed) {
+
+        console.log("DOM Test : PASSED");
+
+    }
+
+    else {
+
+        console.warn("DOM Test : FAILED");
+
+    }
+
+    return passed;
+
+}
+
+/* ==========================================================
+   PERFORMANCE LOG
+========================================================== */
+
+function logPerformance() {
+
+    if (!window.performance) {
+
+        return;
+
+    }
+
+    const navigation = performance.getEntriesByType("navigation")[0];
+
+    if (navigation) {
+
+        console.log(
+
+            `Page Loaded in ${navigation.loadEventEnd.toFixed(2)} ms`
+
         );
-
-    if (savedFormat !== null) {
-
-        is12HourFormat = savedFormat;
-
-        formatToggle.checked = savedFormat;
 
     }
 
 }
 
-// -----------------------------
-// Initialize
-// -----------------------------
+/* ==========================================================
+   WINDOW EVENTS
+========================================================== */
 
-function initializeClock() {
+window.addEventListener("load", () => {
 
-    loadPreferences();
+    initialize();
 
-    scheduleClock();
+    selfTest();
 
-}
+    logPerformance();
 
-// Start Application
+});
 
-initializeClock();
+/* ==========================================================
+   HANDLE PAGE RESTORE
+========================================================== */
+
+window.addEventListener("pageshow", () => {
+
+    if (!App.initialized) {
+
+        initialize();
+
+    }
+
+});
+
+/* ==========================================================
+   HANDLE PAGE UNLOAD
+========================================================== */
+
+window.addEventListener("beforeunload", () => {
+
+    stopClock();
+
+});
+
+/* ==========================================================
+   OPTIONAL DEBUG API
+========================================================== */
+
+window.LiveFlipClock = {
+
+    start: startClock,
+
+    stop: stopClock,
+
+    update: updateClock,
+
+    setTheme: setTheme,
+
+    setTimeFormat: setTimeFormat,
+
+    state: App
+
+};
+
+/* ==========================================================
+   END OF FILE
+========================================================== */
