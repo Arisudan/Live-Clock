@@ -2,39 +2,324 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Live Clock with Seconds</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Flip Clock</title>
     <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            --card-bg: #1e293b;
+            --card-text: #f8fafc;
+            --accent-color: #38bdf8;
+            --toggle-bg: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            background-color: #0d1117;
-            color: #58a6ff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-gradient);
+            background-size: 400% 400%;
+            animation: gradientMove 15s ease infinite;
+            min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            position: relative;
         }
-        #clock {
-            font-size: 5rem;
-            font-weight: bold;
-            letter-spacing: 2px;
+
+        /* Animated Background Elements */
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .bg-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.08) 0%, rgba(0,0,0,0) 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            pointer-events: none;
+            animation: pulseGlow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.5; }
+            100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+        }
+
+        /* Main Container */
+        .clock-container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2.5rem;
+            background: rgba(30, 41, 59, 0.4);
+            padding: 3.5rem;
+            border-radius: 24px;
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Format Toggle Switch */
+        .toggle-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .toggle-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--toggle-bg);
+            transition: .3s;
+            border-radius: 34px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--card-text);
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Flip Clock Layout */
+        .flip-clock {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .separator {
+            font-size: 4rem;
+            color: #64748b;
+            font-weight: 300;
+            line-height: 1;
+            margin-top: -10px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0.3; }
+        }
+
+        /* Card Mechanics */
+        .card-group {
+            display: flex;
+            gap: 4px;
+        }
+
+        .flip-card {
+            position: relative;
+            width: 70px;
+            height: 100px;
+            font-size: 4.5rem;
+            font-weight: 700;
+            line-height: 100px;
+            text-align: center;
+            perspective: 250px;
+            border-radius: 8px;
+        }
+
+        .card-top, .card-bottom {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            overflow: hidden;
+            background: var(--card-bg);
+            color: var(--card-text);
+            backface-visibility: hidden;
+        }
+
+        .card-top {
+            top: 0;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+            line-height: 100px;
+        }
+
+        .card-bottom {
+            bottom: 0;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            line-height: 0px;
+            background: #151c2c;
+        }
+
+        /* 3D Flip Animation Classes */
+        .flip-card.animate .card-top {
+            animation: flipTop 0.4s ease-in forwards;
+            transform-origin: bottom;
+        }
+
+        @keyframes flipTop {
+            100% { transform: rotateX(-90deg); }
+        }
+
+        /* Period (AM/PM) Display */
+        .period-box {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            letter-spacing: 0.1em;
+            margin-left: 0.5rem;
+            min-width: 45px;
+            text-align: left;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .period-box.visible {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-    <div id="clock">00:00:00</div>
+
+    <div class="bg-glow"></div>
+
+    <div class="clock-container">
+        <!-- Control Panel -->
+        <label class="toggle-wrapper">
+            <span class="toggle-label">24H</span>
+            <div class="switch">
+                <input type="checkbox" id="formatToggle" checked>
+                <span class="slider"></span>
+            </div>
+            <span class="toggle-label">12H</span>
+        </label>
+
+        <!-- Digital Flip Display -->
+        <div class="flip-clock">
+            <!-- Hours -->
+            <div class="card-group" id="hours-group">
+                <div class="flip-card" id="h1"><div class="card-top">0</div><div class="card-bottom">0</div></div>
+                <div class="flip-card" id="h2"><div class="card-top">0</div><div class="card-bottom">0</div></div>
+            </div>
+            
+            <div class="separator">:</div>
+
+            <!-- Minutes -->
+            <div class="card-group" id="minutes-group">
+                <div class="flip-card" id="m1"><div class="card-top">0</div><div class="card-bottom">0</div></div>
+                <div class="flip-card" id="m2"><div class="card-top">0</div><div class="card-bottom">0</div></div>
+            </div>
+
+            <div class="separator">:</div>
+
+            <!-- Seconds -->
+            <div class="card-group" id="seconds-group">
+                <div class="flip-card" id="s1"><div class="card-top">0</div><div class="card-bottom">0</div></div>
+                <div class="flip-card" id="s2"><div class="card-top">0</div><div class="card-bottom">0</div></div>
+            </div>
+
+            <!-- AM/PM Indicator -->
+            <div class="period-box" id="period-display">AM</div>
+        </div>
+    </div>
 
     <script>
+        const formatToggle = document.getElementById('formatToggle');
+        const periodDisplay = document.getElementById('period-display');
+
+        // Track current values to prevent redundant animation triggers
+        let currentValues = { h1: '', h2: '', m1: '', m2: '', s1: '', s2: '' };
+
+        function updateCard(cardId, newValue) {
+            const cardNode = document.getElementById(cardId);
+            if (currentValues[cardId] === newValue) return;
+
+            currentValues[cardId] = newValue;
+            
+            // Trigger 3D flip card visual action
+            cardNode.classList.remove('animate');
+            void cardNode.offsetWidth; // Force CSS reflow
+            
+            cardNode.querySelector('.card-top').textContent = newValue;
+            cardNode.querySelector('.card-bottom').textContent = newValue;
+            cardNode.classList.add('animate');
+        }
+
         function updateClock() {
             const now = new Date();
-            let hours = String(now.getHours()).padStart(2, '0');
-            let minutes = String(now.getMinutes()).padStart(2, '0');
-            let seconds = String(now.getSeconds()).padStart(2, '0');
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
             
-            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+            const is12Hour = formatToggle.checked;
+
+            if (is12Hour) {
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                periodDisplay.textContent = ampm;
+                periodDisplay.classList.add('visible');
+                
+                hours = hours % 12;
+                hours = hours ? hours : 12; // Handle '0' hours as '12'
+            } else {
+                periodDisplay.classList.remove('visible');
+            }
+
+            const hoursStr = String(hours).padStart(2, '0');
+
+            // Map values to discrete structural layout components
+            updateCard('h1', hoursStr[0]);
+            updateCard('h2', hoursStr[1]);
+            updateCard('m1', minutes[0]);
+            updateCard('m2', minutes[1]);
+            updateCard('s1', seconds[0]);
+            updateCard('s2', seconds[1]);
         }
-        setInterval(updateClock, 1000);
-        updateClock(); // Initial run
-    </script>
-</body>
-</html>
+
