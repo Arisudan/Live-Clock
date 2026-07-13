@@ -6,8 +6,29 @@
   <title>Aesthetic Online Flip Clock Replica</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="theme-dark">
 
+  <!-- Flocus Inspired Controls Panel -->
+  <div class="controls-panel">
+    <!-- Format Toggle Switch -->
+    <div class="toggle-container">
+      <span class="toggle-label">12-Hour Format</span>
+      <label class="switch">
+        <input type="checkbox" id="format-toggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- Interactive Color Layout Theme Switcher -->
+    <div class="theme-picker">
+      <button class="theme-btn btn-dark active" onclick="setTheme('theme-dark')" title="Classic Dark"></button>
+      <button class="theme-btn btn-light" onclick="setTheme('theme-light')" title="Minimal Light"></button>
+      <button class="theme-btn btn-sage" onclick="setTheme('theme-sage')" title="Aesthetic Sage"></button>
+      <button class="theme-btn btn-sakura" onclick="setTheme('theme-sakura')" title="Sakura Pink"></button>
+    </div>
+  </div>
+
+  <!-- Master Clock Container -->
   <div class="clock-container">
     <!-- Hours Group -->
     <div class="flip-group">
@@ -48,6 +69,9 @@
         <div class="bottom">0</div>
       </div>
     </div>
+
+    <!-- AM/PM Indicator Card (Hidden in 24h mode) -->
+    <div class="ampm-card" id="ampm-indicator">AM</div>
   </div>
 
   <script src="script.js"></script>
