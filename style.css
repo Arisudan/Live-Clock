@@ -1,67 +1,166 @@
-/* =====================================================
+/* =========================================================
    Live Flip Clock
    Author : Arisudan
-   ===================================================== */
+   ========================================================= */
 
-/* =========================
-   Theme Variables
-========================= */
+
+/* =========================================================
+   CSS VARIABLES
+   ========================================================= */
+
+:root{
+
+    --transition:0.35s ease;
+
+    --radius-small:12px;
+    --radius-medium:18px;
+    --radius-large:30px;
+
+    --shadow-light:
+        0 6px 18px rgba(0,0,0,.08);
+
+    --shadow-medium:
+        0 15px 40px rgba(0,0,0,.16);
+
+    --shadow-heavy:
+        0 25px 60px rgba(0,0,0,.22);
+
+}
+
+/* ===========================
+   DARK
+=========================== */
 
 .theme-dark{
-    --bg-color:#121212;
-    --card-bg:#1e1e1f;
-    --text-color:#f5f5f7;
-    --accent-color:#444;
+
+    --background:#111111;
+
+    --card:#1d1d1f;
+
+    --text:#f6f6f7;
+
+    --divider:#2f2f31;
+
+    --toolbar:rgba(255,255,255,.06);
+
 }
+
+/* ===========================
+   LIGHT
+=========================== */
 
 .theme-light{
-    --bg-color:#f5f5f7;
-    --card-bg:#ffffff;
-    --text-color:#1c1c1e;
-    --accent-color:#e5e5ea;
+
+    --background:#f4f4f5;
+
+    --card:#ffffff;
+
+    --text:#191919;
+
+    --divider:#dddddd;
+
+    --toolbar:rgba(255,255,255,.70);
+
 }
+
+/* ===========================
+   SAGE
+=========================== */
 
 .theme-sage{
-    --bg-color:#e2e8e4;
-    --card-bg:#ffffff;
-    --text-color:#4a5d4e;
-    --accent-color:#cbd5ce;
+
+    --background:#dde5df;
+
+    --card:#ffffff;
+
+    --text:#4d6355;
+
+    --divider:#cad4cb;
+
+    --toolbar:rgba(255,255,255,.65);
+
 }
+
+/* ===========================
+   SAKURA
+=========================== */
 
 .theme-sakura{
-    --bg-color:#fae8eb;
-    --card-bg:#ffffff;
-    --text-color:#bd808a;
-    --accent-color:#f3d1d6;
+
+    --background:#fae8eb;
+
+    --card:#ffffff;
+
+    --text:#ba7a85;
+
+    --divider:#efd3d8;
+
+    --toolbar:rgba(255,255,255,.70);
+
 }
 
-/* =========================
-   Global
-========================= */
+/* =========================================================
+   RESET
+   ========================================================= */
 
-*{
+*,
+*::before,
+*::after{
+
     margin:0;
     padding:0;
+
     box-sizing:border-box;
+
 }
 
-html,
-body{
-    width:100%;
-    height:100%;
+html{
+
+    font-size:16px;
+
+    scroll-behavior:smooth;
+
 }
 
 body{
 
-    background:var(--bg-color);
+    min-height:100vh;
 
-    color:var(--text-color);
+    background:var(--background);
+
+    color:var(--text);
 
     font-family:
-    "Helvetica Neue",
+
+    "Inter",
+
+    "Segoe UI",
+
     Helvetica,
+
     Arial,
+
     sans-serif;
+
+    transition:
+
+    background var(--transition),
+
+    color var(--transition);
+
+    overflow:hidden;
+
+}
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+.page{
+
+    width:100%;
+
+    min-height:100vh;
 
     display:flex;
 
@@ -71,89 +170,109 @@ body{
 
     align-items:center;
 
-    padding-top:55px;
+    padding:
 
-    transition:
-    background .35s ease,
-    color .35s ease;
+    50px
 
-    overflow:hidden;
+    30px
+
+    30px;
 
 }
 
-/* =========================
-   Controls
-========================= */
+/* =========================================================
+   TOOLBAR
+   ========================================================= */
 
-.controls-panel{
+.toolbar{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:30px;
+
+    padding:
+
+    14px
+
+    26px;
+
+    background:var(--toolbar);
+
+    backdrop-filter:blur(18px);
+
+    -webkit-backdrop-filter:blur(18px);
+
+    border-radius:999px;
+
+    box-shadow:var(--shadow-light);
+
+    margin-bottom:70px;
+
+}
+
+/* =========================================================
+   LEFT
+   ========================================================= */
+
+.toolbar-left{
 
     display:flex;
 
     align-items:center;
 
-    justify-content:center;
-
-    gap:22px;
-
-    padding:14px 28px;
-
-    border-radius:50px;
-
-    background:rgba(255,255,255,.06);
-
-    backdrop-filter:blur(14px);
-
-    -webkit-backdrop-filter:blur(14px);
-
-    box-shadow:
-
-    0 10px 30px rgba(0,0,0,.15);
-
-    margin-bottom:65px;
-
-    z-index:100;
-
 }
 
-.theme-light .controls-panel,
-.theme-sage .controls-panel,
-.theme-sakura .controls-panel{
+/* =========================================================
+   RIGHT
+   ========================================================= */
 
-    background:rgba(0,0,0,.04);
-
-}
-
-/* =========================
-   Toggle
-========================= */
-
-.toggle-container{
+.toolbar-right{
 
     display:flex;
 
     align-items:center;
 
-    gap:12px;
+}
+
+/* =========================================================
+   TOGGLE
+   ========================================================= */
+
+.toggle-group{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
 
 }
 
-.toggle-label{
-
-    color:var(--text-color);
+.toggle-title{
 
     font-size:.95rem;
 
     font-weight:600;
 
+    color:var(--text);
+
 }
+
+/* =========================================================
+   SWITCH
+   ========================================================= */
 
 .switch{
 
     position:relative;
 
-    width:50px;
+    width:54px;
 
-    height:26px;
+    height:28px;
 
 }
 
@@ -169,13 +288,13 @@ body{
 
     inset:0;
 
-    border-radius:30px;
-
     background:#bdbdbd;
+
+    border-radius:999px;
 
     cursor:pointer;
 
-    transition:.3s;
+    transition:all .30s ease;
 
 }
 
@@ -185,19 +304,19 @@ body{
 
     position:absolute;
 
-    width:20px;
+    width:22px;
 
-    height:20px;
+    height:22px;
 
     left:3px;
 
-    bottom:3px;
-
-    background:white;
+    top:3px;
 
     border-radius:50%;
 
-    transition:.3s;
+    background:white;
+
+    transition:.30s;
 
 }
 
@@ -209,43 +328,51 @@ input:checked+.slider{
 
 input:checked+.slider::before{
 
-    transform:translateX(24px);
+    transform:translateX(26px);
 
 }
 
-/* =========================
-   Theme Picker
-========================= */
+/* =========================================================
+   THEME PICKER
+   ========================================================= */
 
 .theme-picker{
 
     display:flex;
 
+    align-items:center;
+
     gap:12px;
 
 }
 
+/* =========================================================
+   THEME BUTTON
+   ========================================================= */
+
 .theme-btn{
 
-    width:28px;
+    width:26px;
 
-    height:28px;
-
-    border-radius:50%;
+    height:26px;
 
     border:none;
+
+    border-radius:50%;
 
     cursor:pointer;
 
     transition:
+
     transform .25s,
+
     box-shadow .25s;
 
 }
 
 .theme-btn:hover{
 
-    transform:scale(1.12);
+    transform:scale(1.15);
 
 }
 
@@ -255,87 +382,91 @@ input:checked+.slider::before{
 
     box-shadow:
 
-    0 0 0 3px rgba(255,255,255,.45);
+    0 0 0 3px rgba(255,255,255,.40);
 
 }
 
 .btn-dark{
 
-    background:#121212;
+    background:#111111;
 
 }
 
 .btn-light{
 
-    background:white;
+    background:#ffffff;
 
-    border:1px solid #bbb;
+    border:1px solid #cccccc;
 
 }
 
 .btn-sage{
 
-    background:#91a897;
+    background:#8ea291;
 
 }
 
 .btn-sakura{
 
-    background:#ebb3bf;
+    background:#ebb2bf;
 
 }
 
-/* =========================
-   Clock Wrapper
-========================= */
+/* =========================================================
+   CLOCK WRAPPER
+   ========================================================= */
 
 .clock-wrapper{
 
     width:100%;
 
+    flex:1;
+
     display:flex;
 
     justify-content:center;
 
-    align-items:center;
-
-}
-
-/* =========================
-   Clock Container
-========================= */
+   /* =========================================================
+   CLOCK CONTAINER
+========================================================= */
 
 .clock-container{
 
     display:flex;
 
-    justify-content:center;
-
     align-items:center;
+
+    justify-content:center;
 
     gap:22px;
 
-    width:min(96vw,1200px);
+    width:100%;
+
+    max-width:1400px;
 
 }
 
-/* =========================
-   Groups
-========================= */
+/* =========================================================
+   DIGIT GROUP
+========================================================= */
 
-.flip-group{
+.digit-group{
 
     display:flex;
+
+    align-items:center;
+
+    justify-content:center;
 
     gap:10px;
 
 }
 
-/* =========================
-   Colon
-========================= */
+/* =========================================================
+   SEPARATOR (:)
+========================================================= */
 
-.colon{
+.separator{
 
     display:flex;
 
@@ -343,53 +474,53 @@ input:checked+.slider::before{
 
     align-items:center;
 
-    font-size:clamp(70px,8vw,125px);
+    width:28px;
+
+    font-size:clamp(60px,7vw,115px);
 
     font-weight:700;
 
-    color:var(--text-color);
+    color:var(--text);
 
     line-height:1;
 
-    animation:blink 1s infinite;
+    user-select:none;
 
-    padding-bottom:10px;
+    animation:blink 1s infinite;
 
 }
 
-/* =========================
-   Flip Card
-========================= */
+/* =========================================================
+   FLIP CARD
+========================================================= */
 
 .flip-card{
 
     position:relative;
 
-    width:clamp(72px,11vw,120px);
+    width:clamp(78px,10vw,130px);
 
-    height:clamp(110px,17vw,180px);
+    height:clamp(118px,15vw,190px);
 
-    background:var(--card-bg);
+    background:var(--card);
 
-    border-radius:16px;
-
-    color:var(--text-color);
-
-    font-size:clamp(60px,8vw,105px);
-
-    font-weight:700;
-
-    perspective:700px;
+    border-radius:18px;
 
     overflow:hidden;
 
+    perspective:1200px;
+
+    transform-style:preserve-3d;
+
     box-shadow:
 
-    0 18px 40px rgba(0,0,0,.22);
+        var(--shadow-medium);
 
 }
 
-/* Divider */
+/* =========================================================
+   DIVIDER
+========================================================= */
 
 .flip-card::after{
 
@@ -405,184 +536,220 @@ input:checked+.slider::before{
 
     height:2px;
 
-    background:rgba(0,0,0,.15);
+    background:var(--divider);
 
-    z-index:5;
+    z-index:10;
 
 }
-/* =====================================================
-   Flip Card Halves
-===================================================== */
+
+/* =========================================================
+   TOP + BOTTOM
+========================================================= */
 
 .flip-card .top,
-.flip-card .bottom {
+.flip-card .bottom{
 
-    position: absolute;
+    position:absolute;
 
-    left: 0;
+    left:0;
 
-    width: 100%;
+    width:100%;
 
-    height: 50%;
+    height:50%;
 
-    display: flex;
+    display:flex;
 
-    justify-content: center;
+    justify-content:center;
 
-    overflow: hidden;
+    overflow:hidden;
 
-    background: var(--card-bg);
+    background:var(--card);
 
-    backface-visibility: hidden;
+    color:var(--text);
 
-    -webkit-backface-visibility: hidden;
+    font-weight:700;
 
-}
+    font-size:clamp(58px,7vw,100px);
 
-.flip-card .top {
+    backface-visibility:hidden;
 
-    top: 0;
-
-    align-items: flex-end;
-
-    transform-origin: bottom;
-
-    border-radius: 16px 16px 0 0;
-
-    line-height: 1.05;
-
-    padding-bottom: 2px;
+    -webkit-backface-visibility:hidden;
 
 }
 
-.flip-card .bottom {
+/* =========================================================
+   TOP HALF
+========================================================= */
 
-    bottom: 0;
+.flip-card .top{
 
-    align-items: flex-start;
+    top:0;
 
-    transform-origin: top;
+    align-items:flex-end;
 
-    border-radius: 0 0 16px 16px;
+    padding-bottom:3px;
 
-    line-height: 0.08;
+    border-radius:18px 18px 0 0;
 
-    padding-top: 2px;
+    transform-origin:bottom;
+
+    line-height:1.02;
 
 }
 
-/* =====================================================
-   AM / PM Badge
-===================================================== */
+/* =========================================================
+   BOTTOM HALF
+========================================================= */
 
-.ampm-card {
+.flip-card .bottom{
 
-    display: none;
+    bottom:0;
 
-    justify-content: center;
+    align-items:flex-start;
 
-    align-items: center;
+    padding-top:3px;
 
-    min-width: 80px;
+    border-radius:0 0 18px 18px;
 
-    height: 60px;
+    transform-origin:top;
 
-    margin-left: 18px;
+    line-height:.08;
 
-    padding: 0 20px;
+}
 
-    background: var(--card-bg);
+/* =========================================================
+   LIGHT HIGHLIGHT
+========================================================= */
 
-    color: var(--text-color);
+.flip-card::before{
 
-    border-radius: 14px;
+    content:"";
 
-    font-size: clamp(20px, 2vw, 28px);
+    position:absolute;
 
-    font-weight: 700;
+    top:0;
 
-    letter-spacing: 2px;
+    left:0;
+
+    width:100%;
+
+    height:45%;
+
+    background:
+
+        linear-gradient(
+
+            rgba(255,255,255,.10),
+
+            rgba(255,255,255,0)
+
+        );
+
+    pointer-events:none;
+
+    z-index:2;
+
+}
+
+/* =========================================================
+   CARD EDGE SHADOW
+========================================================= */
+
+.flip-card{
+
+    border:
+
+        1px solid
+
+        rgba(255,255,255,.03);
+
+}
+
+/* =========================================================
+   INNER SHADOW
+========================================================= */
+
+.flip-card .top{
 
     box-shadow:
 
-        0 10px 25px rgba(0,0,0,.15);
+        inset 0 -3px 6px rgba(0,0,0,.08);
 
 }
 
-/* =====================================================
-   Flip Animation
-===================================================== */
+.flip-card .bottom{
 
-.flip-card.animate .top {
+    box-shadow:
 
-    animation: flipTop .35s ease-in forwards;
+        inset 0 3px 6px rgba(255,255,255,.03);
 
 }
 
-.flip-card.animate .bottom {
+/* =========================================================
+   DIGIT ALIGNMENT
+========================================================= */
 
-    animation: flipBottom .35s ease-out forwards;
+.flip-card .top,
 
-}
+.flip-card .bottom{
 
-/* =====================================================
-   Keyframes
-===================================================== */
+    letter-spacing:-2px;
 
-@keyframes flipTop {
-
-    0% {
-
-        transform: rotateX(0deg);
-
-    }
-
-    100% {
-
-        transform: rotateX(-90deg);
-
-    }
+    font-variant-numeric:tabular-nums;
 
 }
 
-@keyframes flipBottom {
+/* =========================================================
+   AM PM
+========================================================= */
 
-    0% {
+.ampm-card{
 
-        transform: rotateX(90deg);
+    display:none;
 
-    }
+    justify-content:center;
 
-    100% {
+    align-items:center;
 
-        transform: rotateX(0deg);
+    margin-left:18px;
 
-    }
+    min-width:80px;
+
+    height:58px;
+
+    background:var(--card);
+
+    color:var(--text);
+
+    border-radius:14px;
+
+    font-size:clamp(18px,2vw,26px);
+
+    font-weight:700;
+
+    letter-spacing:2px;
+
+    box-shadow:
+
+        var(--shadow-light);
 
 }
 
-@keyframes blink {
+/* =========================================================
+   AM PM ACTIVE
+========================================================= */
 
-    0%,
-    100% {
+.ampm-card.show{
 
-        opacity: 1;
-
-    }
-
-    50% {
-
-        opacity: .25;
-
-    }
+    display:flex;
 
 }
 
-/* =====================================================
-   Hover Effects
-===================================================== */
+/* =========================================================
+   CARD HOVER
+========================================================= */
 
-.flip-card {
+.flip-card{
 
     transition:
 
@@ -592,25 +759,348 @@ input:checked+.slider::before{
 
 }
 
-.flip-card:hover {
+.flip-card:hover{
 
-    transform: translateY(-4px);
+    transform:
+
+        translateY(-3px);
 
     box-shadow:
 
-        0 24px 45px rgba(0,0,0,.28);
+        var(--shadow-heavy);
+
+}
+    align-items:flex-start;
+
+}
+/* =========================================================
+   FLIP ANIMATION ENGINE
+========================================================= */
+
+.flip-card{
+
+    transform-style:preserve-3d;
+
+    will-change:transform;
 
 }
 
-/* =====================================================
-   Smooth Theme Transition
-===================================================== */
+.flip-card .top,
+.flip-card .bottom{
+
+    will-change:transform;
+
+    transform-style:preserve-3d;
+
+}
+
+/* =========================================================
+   ACTIVE ANIMATION
+========================================================= */
+
+.flip-card.animate .top{
+
+    animation:
+
+        flipTop
+
+        .45s
+
+        cubic-bezier(.37,.02,.27,1)
+
+        forwards;
+
+}
+
+.flip-card.animate .bottom{
+
+    animation:
+
+        flipBottom
+
+        .45s
+
+        cubic-bezier(.23,1,.32,1)
+
+        forwards;
+
+}
+
+/* =========================================================
+   TOP FLIP
+========================================================= */
+
+@keyframes flipTop{
+
+    0%{
+
+        transform:
+
+            rotateX(0deg);
+
+        z-index:4;
+
+    }
+
+    40%{
+
+        transform:
+
+            rotateX(-40deg);
+
+    }
+
+    100%{
+
+        transform:
+
+            rotateX(-90deg);
+
+        z-index:1;
+
+    }
+
+}
+
+/* =========================================================
+   BOTTOM FLIP
+========================================================= */
+
+@keyframes flipBottom{
+
+    0%{
+
+        transform:
+
+            rotateX(90deg);
+
+        z-index:2;
+
+    }
+
+    60%{
+
+        transform:
+
+            rotateX(35deg);
+
+    }
+
+    100%{
+
+        transform:
+
+            rotateX(0deg);
+
+        z-index:4;
+
+    }
+
+}
+
+/* =========================================================
+   SHADOW DURING FLIP
+========================================================= */
+
+.flip-card.animate::before{
+
+    animation:
+
+        flipShadow
+
+        .45s
+
+        ease;
+
+}
+
+@keyframes flipShadow{
+
+    0%{
+
+        opacity:.08;
+
+    }
+
+    50%{
+
+        opacity:.22;
+
+    }
+
+    100%{
+
+        opacity:.08;
+
+    }
+
+}
+
+/* =========================================================
+   CARD APPEAR
+========================================================= */
+
+@keyframes cardAppear{
+
+    from{
+
+        opacity:0;
+
+        transform:
+
+            translateY(20px)
+
+            scale(.96);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+
+            translateY(0)
+
+            scale(1);
+
+    }
+
+}
+
+.flip-card{
+
+    animation:
+
+        cardAppear
+
+        .6s
+
+        ease;
+
+}
+
+/* =========================================================
+   COLON BLINK
+========================================================= */
+
+@keyframes blink{
+
+    0%{
+
+        opacity:1;
+
+    }
+
+    50%{
+
+        opacity:.20;
+
+    }
+
+    100%{
+
+        opacity:1;
+
+    }
+
+}
+
+/* =========================================================
+   TOOLBAR FADE
+========================================================= */
+
+.toolbar{
+
+    animation:
+
+        toolbarFade
+
+        .8s
+
+        ease;
+
+}
+
+@keyframes toolbarFade{
+
+    from{
+
+        opacity:0;
+
+        transform:
+
+            translateY(-25px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+
+            translateY(0);
+
+    }
+
+}
+
+/* =========================================================
+   CLOCK FADE
+========================================================= */
+
+.clock-container{
+
+    animation:
+
+        clockFade
+
+        .8s
+
+        ease;
+
+}
+
+@keyframes clockFade{
+
+    from{
+
+        opacity:0;
+
+        transform:
+
+            scale(.96);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+
+            scale(1);
+
+    }
+
+}
+
+/* =========================================================
+   THEME TRANSITIONS
+========================================================= */
 
 body,
-.controls-panel,
+
 .flip-card,
+
+.toolbar,
+
 .ampm-card,
-.colon {
+
+.separator,
+
+.slider{
 
     transition:
 
@@ -618,101 +1108,314 @@ body,
 
         color .35s ease,
 
+        border-color .35s ease,
+
         box-shadow .35s ease;
 
 }
 
-/* =====================================================
-   Desktop
-===================================================== */
+/* =========================================================
+   BUTTON ANIMATION
+========================================================= */
 
-@media (min-width:1400px){
+.theme-btn{
 
-    .clock-container{
+    transition:
 
-        gap:28px;
+        transform .25s,
+
+        box-shadow .25s,
+
+        border-color .25s;
+
+}
+
+.theme-btn:active{
+
+    transform:
+
+        scale(.92);
+
+}
+
+/* =========================================================
+   AM PM ANIMATION
+========================================================= */
+
+.ampm-card{
+
+    transition:
+
+        opacity .3s ease,
+
+        transform .3s ease;
+
+}
+
+.ampm-card.show{
+
+    display:flex;
+
+    animation:
+
+        amFade
+
+        .3s
+
+        ease;
+
+}
+
+@keyframes amFade{
+
+    from{
+
+        opacity:0;
+
+        transform:
+
+            translateY(8px);
 
     }
 
-    .flip-group{
+    to{
 
-        gap:12px;
+        opacity:1;
+
+        transform:
+
+            translateY(0);
 
     }
 
 }
 
-/* =====================================================
-   Tablet
-===================================================== */
+/* =========================================================
+   HOVER EFFECTS
+========================================================= */
 
-@media (max-width:900px){
+.flip-card:hover{
 
-    body{
+    transform:
 
-        padding-top:40px;
+        translateY(-4px)
 
-    }
+        scale(1.015);
 
-    .controls-panel{
+}
 
-        margin-bottom:45px;
+.theme-btn:hover{
 
-        padding:12px 22px;
+    transform:
 
-        gap:18px;
+        scale(1.18);
 
-    }
+}
+
+.switch:hover .slider{
+
+    filter:
+
+        brightness(1.05);
+
+}
+
+/* =========================================================
+   PERFORMANCE
+========================================================= */
+
+.flip-card,
+
+.separator,
+
+.theme-btn,
+
+.slider,
+
+.ampm-card{
+
+    backface-visibility:hidden;
+
+    -webkit-backface-visibility:hidden;
+
+    transform:translateZ(0);
+
+}
+
+/* =========================================================
+   REDUCED MOTION SUPPORT
+========================================================= */
+
+@media (prefers-reduced-motion:reduce){
+
+*{
+
+animation:none !important;
+
+transition:none !important;
+
+scroll-behavior:auto !important;
+
+}
+
+}
+/* =========================================================
+   RESPONSIVE DESIGN
+========================================================= */
+
+/* ---------- Large Desktop ---------- */
+
+@media (min-width:1600px){
 
     .clock-container{
+
+        gap:32px;
+
+    }
+
+    .digit-group{
 
         gap:14px;
 
     }
 
-    .flip-group{
+}
 
-        gap:8px;
+/* ---------- Desktop ---------- */
 
-    }
+@media (max-width:1400px){
 
-    .ampm-card{
+    .clock-container{
 
-        min-width:65px;
-
-        height:50px;
-
-        margin-left:12px;
+        gap:20px;
 
     }
 
 }
 
-/* =====================================================
-   Mobile
-===================================================== */
+/* ---------- Laptop ---------- */
+
+@media (max-width:1200px){
+
+    .toolbar{
+
+        margin-bottom:55px;
+
+    }
+
+    .clock-container{
+
+        gap:16px;
+
+    }
+
+    .digit-group{
+
+        gap:8px;
+
+    }
+
+}
+
+/* ---------- Tablet ---------- */
+
+@media (max-width:900px){
+
+    .page{
+
+        padding:
+
+        40px
+
+        20px
+
+        20px;
+
+    }
+
+    .toolbar{
+
+        padding:
+
+        12px
+
+        22px;
+
+        gap:20px;
+
+        margin-bottom:40px;
+
+    }
+
+    .toggle-title{
+
+        font-size:.90rem;
+
+    }
+
+    .clock-container{
+
+        gap:12px;
+
+    }
+
+    .digit-group{
+
+        gap:6px;
+
+    }
+
+    .ampm-card{
+
+        min-width:68px;
+
+        height:48px;
+
+        margin-left:10px;
+
+    }
+
+}
+
+/* ---------- Mobile ---------- */
 
 @media (max-width:600px){
 
-    body{
+    .page{
 
-        padding-top:25px;
+        padding:
+
+        25px
+
+        12px
+
+        20px;
 
     }
 
-    .controls-panel{
+    .toolbar{
 
-        flex-direction: column;
+        width:100%;
 
-        gap:15px;
+        border-radius:22px;
 
-        padding:16px 18px;
+        flex-direction:column;
+
+        gap:18px;
+
+        padding:18px;
 
         margin-bottom:30px;
 
-        border-radius:20px;
+    }
 
-        transform: scale(.92);
+    .toolbar-left,
+
+    .toolbar-right{
+
+        justify-content:center;
+
+        width:100%;
 
     }
 
@@ -722,92 +1425,153 @@ body,
 
     }
 
-    .flip-group{
+    .digit-group{
 
-        gap:5px;
+        gap:4px;
 
     }
 
-    .colon{
+    .separator{
 
-        font-size:clamp(40px,7vw,60px);
+        width:16px;
 
-        padding-bottom:6px;
+        font-size:clamp(34px,7vw,55px);
 
     }
 
     .ampm-card{
 
-        min-width:55px;
+        min-width:52px;
 
-        height:42px;
+        height:40px;
 
-        font-size:18px;
+        font-size:16px;
 
-        margin-left:6px;
+        margin-left:4px;
 
     }
 
 }
 
-/* =====================================================
-   Small Phones
-===================================================== */
+/* ---------- Small Phones ---------- */
 
-@media (max-width:380px){
+@media (max-width:420px){
 
-    .controls-panel{
+    .toolbar{
 
-        transform:scale(.85);
+        transform:scale(.92);
+
+        transform-origin:center;
 
     }
 
     .clock-container{
 
-        transform:scale(.88);
+        transform:scale(.90);
+
+        transform-origin:center;
 
     }
 
 }
 
-/* =====================================================
-   Accessibility
-===================================================== */
+/* ---------- Tiny Devices ---------- */
 
-.theme-btn:focus-visible,
-.switch input:focus-visible + .slider{
+@media (max-width:360px){
 
-    outline:3px solid #4da3ff;
+    .toolbar{
 
-    outline-offset:3px;
+        transform:scale(.82);
+
+    }
+
+    .clock-container{
+
+        transform:scale(.82);
+
+    }
 
 }
 
-/* =====================================================
-   Selection
-===================================================== */
+/* ---------- Landscape Phones ---------- */
+
+@media (max-height:500px){
+
+    .page{
+
+        justify-content:center;
+
+    }
+
+    .toolbar{
+
+        margin-bottom:18px;
+
+    }
+
+}
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.theme-btn:focus-visible,
+
+.switch input:focus-visible + .slider{
+
+    outline:3px solid #4a90ff;
+
+    outline-offset:4px;
+
+}
+
+button{
+
+    font:inherit;
+
+}
+
+button:disabled{
+
+    opacity:.5;
+
+    cursor:not-allowed;
+
+}
+
+/* =========================================================
+   TEXT SELECTION
+========================================================= */
 
 ::selection{
 
-    background:rgba(100,149,237,.35);
+    background:rgba(100,149,237,.30);
+
+    color:inherit;
 
 }
 
-/* =====================================================
-   Scrollbar
-===================================================== */
+/* =========================================================
+   SCROLLBAR
+========================================================= */
 
 ::-webkit-scrollbar{
 
-    width:8px;
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:transparent;
 
 }
 
 ::-webkit-scrollbar-thumb{
 
-    background:#888;
+    background:#8c8c8c;
 
-    border-radius:10px;
+    border-radius:20px;
 
 }
 
@@ -816,3 +1580,53 @@ body,
     background:#666;
 
 }
+
+/* =========================================================
+   IMAGE SAFETY
+========================================================= */
+
+img{
+
+    max-width:100%;
+
+    display:block;
+
+}
+
+/* =========================================================
+   LINKS
+========================================================= */
+
+a{
+
+    color:inherit;
+
+    text-decoration:none;
+
+}
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print{
+
+    body{
+
+        background:white;
+
+        color:black;
+
+    }
+
+    .toolbar{
+
+        display:none;
+
+    }
+
+}
+
+/* =========================================================
+   END OF FILE
+========================================================= */
