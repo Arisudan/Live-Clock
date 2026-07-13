@@ -2,201 +2,261 @@
 <html lang="en">
 
 <head>
-    <!-- Character Encoding -->
+
+    <!-- =========================
+         Basic Meta
+    ========================== -->
+
     <meta charset="UTF-8">
 
-    <!-- Responsive Viewport -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-    <!-- SEO -->
-    <title>Live Flip Clock | Aesthetic Digital Clock</title>
+    <meta
+        http-equiv="X-UA-Compatible"
+        content="IE=edge">
 
-    <meta name="description"
-        content="A modern responsive live flip clock featuring smooth animations, multiple color themes, and 12/24-hour format support.">
+    <!-- =========================
+         SEO
+    ========================== -->
 
-    <meta name="keywords"
-        content="Flip Clock, Digital Clock, Live Clock, Clock UI, HTML CSS JavaScript">
+    <title>Live Flip Clock | Modern Digital Flip Clock</title>
 
-    <meta name="author" content="Arisudan">
+    <meta
+        name="description"
+        content="A responsive digital flip clock featuring smooth flip animations, multiple themes, and 12/24-hour support.">
 
-    <!-- Browser Theme -->
-    <meta name="theme-color" content="#121212">
+    <meta
+        name="keywords"
+        content="Flip Clock, Digital Clock, Live Clock, HTML CSS JavaScript">
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="Live Flip Clock">
-    <meta property="og:description"
-        content="Responsive Flip Clock with beautiful animations and themes.">
+    <meta
+        name="author"
+        content="Arisudan">
+
+    <meta
+        name="theme-color"
+        content="#121212">
+
+    <!-- =========================
+         Open Graph
+    ========================== -->
+
     <meta property="og:type" content="website">
 
-    <!-- Favicon -->
-    <link rel="icon" href="favicon.ico">
+    <meta
+        property="og:title"
+        content="Live Flip Clock">
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="style.css">
+    <meta
+        property="og:description"
+        content="Beautiful responsive flip clock built using HTML, CSS and JavaScript.">
+
+    <!-- =========================
+         Favicon
+    ========================== -->
+
+    <link
+        rel="icon"
+        href="favicon.ico">
+
+    <!-- =========================
+         CSS
+    ========================== -->
+
+    <link
+        rel="stylesheet"
+        href="style.css">
+
 </head>
 
 <body class="theme-dark">
 
-    <!-- ==========================================================
-                            CONTROL PANEL
-    =========================================================== -->
+    <!-- ==========================================
+            PAGE CONTAINER
+    =========================================== -->
 
-    <header class="controls-panel">
+    <main class="page">
 
-        <!-- Time Format -->
+        <!-- ======================================
+                TOP TOOLBAR
+        ======================================= -->
 
-        <div class="toggle-container">
+        <header class="toolbar">
 
-            <span class="toggle-label">
-                12-Hour Format
-            </span>
+            <!-- Left Controls -->
 
-            <label class="switch">
+            <section class="toolbar-left">
 
-                <input type="checkbox"
-                    id="format-toggle"
-                    aria-label="Toggle 12 hour clock">
+                <div class="toggle-group">
 
-                <span class="slider"></span>
+                    <span class="toggle-title">
+                        12-Hour Format
+                    </span>
 
-            </label>
+                    <label
+                        class="switch"
+                        aria-label="Toggle Time Format">
 
-        </div>
+                        <input
+                            id="format-toggle"
+                            type="checkbox">
 
-        <!-- Theme Picker -->
+                        <span class="slider"></span>
 
-        <div class="theme-picker"
-            aria-label="Theme Selector">
+                    </label>
 
-            <button
-                type="button"
-                class="theme-btn btn-dark active"
-                data-theme="theme-dark"
-                aria-label="Dark Theme"
-                title="Classic Dark">
-            </button>
+                </div>
 
-            <button
-                type="button"
-                class="theme-btn btn-light"
-                data-theme="theme-light"
-                aria-label="Light Theme"
-                title="Minimal Light">
-            </button>
+            </section>
 
-            <button
-                type="button"
-                class="theme-btn btn-sage"
-                data-theme="theme-sage"
-                aria-label="Sage Theme"
-                title="Aesthetic Sage">
-            </button>
+            <!-- Right Controls -->
 
-            <button
-                type="button"
-                class="theme-btn btn-sakura"
-                data-theme="theme-sakura"
-                aria-label="Sakura Theme"
-                title="Sakura Pink">
-            </button>
+            <section class="toolbar-right">
 
-        </div>
+                <div
+                    class="theme-picker"
+                    role="group"
+                    aria-label="Theme Selection">
 
-    </header>
+                    <button
+                        type="button"
+                        class="theme-btn btn-dark active"
+                        data-theme="theme-dark"
+                        aria-label="Dark Theme">
+                    </button>
 
-    <!-- ==========================================================
-                                CLOCK
-    =========================================================== -->
+                    <button
+                        type="button"
+                        class="theme-btn btn-light"
+                        data-theme="theme-light"
+                        aria-label="Light Theme">
+                    </button>
 
-    <main class="clock-wrapper">
+                    <button
+                        type="button"
+                        class="theme-btn btn-sage"
+                        data-theme="theme-sage"
+                        aria-label="Sage Theme">
+                    </button>
+
+                    <button
+                        type="button"
+                        class="theme-btn btn-sakura"
+                        data-theme="theme-sakura"
+                        aria-label="Pink Theme">
+                    </button>
+
+                </div>
+
+            </section>
+
+        </header>
+
+        <!-- ======================================
+                CLOCK AREA
+        ======================================= -->
 
         <section
-            class="clock-container"
+            class="clock-wrapper"
             role="timer"
             aria-live="polite">
 
-            <!-- HOURS -->
+            <div class="clock-container">
 
-            <div class="flip-group">
+                <!-- HOURS -->
 
-                <div class="flip-card" id="hours-tensor">
+                <div class="digit-group">
 
-                    <div class="top">0</div>
+                    <div class="flip-card" id="hours-tensor">
 
-                    <div class="bottom">0</div>
+                        <div class="top">0</div>
 
-                </div>
+                        <div class="bottom">0</div>
 
-                <div class="flip-card" id="hours-unit">
+                    </div>
 
-                    <div class="top">0</div>
+                    <div class="flip-card" id="hours-unit">
 
-                    <div class="bottom">0</div>
+                        <div class="top">0</div>
 
-                </div>
+                        <div class="bottom">0</div>
 
-            </div>
-
-            <!-- COLON -->
-
-            <div class="colon" aria-hidden="true">:</div>
-
-            <!-- MINUTES -->
-
-            <div class="flip-group">
-
-                <div class="flip-card" id="minutes-tensor">
-
-                    <div class="top">0</div>
-
-                    <div class="bottom">0</div>
+                    </div>
 
                 </div>
 
-                <div class="flip-card" id="minutes-unit">
+                <div
+                    class="separator"
+                    aria-hidden="true">
 
-                    <div class="top">0</div>
-
-                    <div class="bottom">0</div>
-
-                </div>
-
-            </div>
-
-            <!-- COLON -->
-
-            <div class="colon" aria-hidden="true">:</div>
-
-            <!-- SECONDS -->
-
-            <div class="flip-group">
-
-                <div class="flip-card" id="seconds-tensor">
-
-                    <div class="top">0</div>
-
-                    <div class="bottom">0</div>
+                    :
 
                 </div>
 
-                <div class="flip-card" id="seconds-unit">
+                <!-- MINUTES -->
 
-                    <div class="top">0</div>
+                <div class="digit-group">
 
-                    <div class="bottom">0</div>
+                    <div class="flip-card" id="minutes-tensor">
+
+                        <div class="top">0</div>
+
+                        <div class="bottom">0</div>
+
+                    </div>
+
+                    <div class="flip-card" id="minutes-unit">
+
+                        <div class="top">0</div>
+
+                        <div class="bottom">0</div>
+
+                    </div>
 
                 </div>
 
-            </div>
+                <div
+                    class="separator"
+                    aria-hidden="true">
 
-            <!-- AM PM -->
+                    :
 
-            <div
-                class="ampm-card"
-                id="ampm-indicator"
-                aria-live="polite">
+                </div>
 
-                AM
+                <!-- SECONDS -->
+
+                <div class="digit-group">
+
+                    <div class="flip-card" id="seconds-tensor">
+
+                        <div class="top">0</div>
+
+                        <div class="bottom">0</div>
+
+                    </div>
+
+                    <div class="flip-card" id="seconds-unit">
+
+                        <div class="top">0</div>
+
+                        <div class="bottom">0</div>
+
+                    </div>
+
+                </div>
+
+                <!-- AM PM -->
+
+                <aside
+                    id="ampm-indicator"
+                    class="ampm-card"
+                    aria-live="polite">
+
+                    AM
+
+                </aside>
 
             </div>
 
@@ -204,11 +264,14 @@
 
     </main>
 
-    <!-- ==========================================================
-                        JAVASCRIPT
-    =========================================================== -->
+    <!-- ==========================================
+            JAVASCRIPT
+    =========================================== -->
 
-    <script src="script.js" defer></script>
+    <script
+        src="script.js"
+        defer>
+    </script>
 
 </body>
 
