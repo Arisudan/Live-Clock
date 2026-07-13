@@ -1,79 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aesthetic Online Flip Clock Replica</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+
+    <!-- Responsive -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO -->
+    <title>Live Flip Clock | Responsive Digital Clock</title>
+
+    <meta
+        name="description"
+        content="A responsive live flip clock with beautiful themes, smooth animations, and 12/24-hour format support."
+    >
+
+    <!-- Browser Theme -->
+    <meta name="theme-color" content="#121212">
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="theme-dark">
 
-  <!-- Flocus Inspired Controls Panel -->
-  <div class="controls-panel">
-    <!-- Format Toggle Switch -->
-    <div class="toggle-container">
-      <span class="toggle-label">12-Hour Format</span>
-      <label class="switch">
-        <input type="checkbox" id="format-toggle">
-        <span class="slider"></span>
-      </label>
+    <!-- ===========================
+         Controls Panel
+    ============================ -->
+
+    <div class="controls-panel">
+
+        <!-- Time Format Toggle -->
+
+        <div class="toggle-container">
+
+            <span class="toggle-label">
+                12-Hour Format
+            </span>
+
+            <label class="switch">
+
+                <input
+                    type="checkbox"
+                    id="format-toggle"
+                    aria-label="Toggle between 12 hour and 24 hour format"
+                >
+
+                <span class="slider"></span>
+
+            </label>
+
+        </div>
+
+        <!-- Theme Picker -->
+
+        <div
+            class="theme-picker"
+            aria-label="Clock Theme Selector"
+        >
+
+            <button
+                type="button"
+                class="theme-btn btn-dark active"
+                data-theme="theme-dark"
+                title="Classic Dark"
+                aria-label="Classic Dark Theme">
+            </button>
+
+            <button
+                type="button"
+                class="theme-btn btn-light"
+                data-theme="theme-light"
+                title="Minimal Light"
+                aria-label="Minimal Light Theme">
+            </button>
+
+            <button
+                type="button"
+                class="theme-btn btn-sage"
+                data-theme="theme-sage"
+                title="Aesthetic Sage"
+                aria-label="Aesthetic Sage Theme">
+            </button>
+
+            <button
+                type="button"
+                class="theme-btn btn-sakura"
+                data-theme="theme-sakura"
+                title="Sakura Pink"
+                aria-label="Sakura Pink Theme">
+            </button>
+
+        </div>
+
     </div>
 
-    <!-- Interactive Color Layout Theme Switcher -->
-    <div class="theme-picker">
-      <button class="theme-btn btn-dark active" onclick="setTheme('theme-dark')" title="Classic Dark"></button>
-      <button class="theme-btn btn-light" onclick="setTheme('theme-light')" title="Minimal Light"></button>
-      <button class="theme-btn btn-sage" onclick="setTheme('theme-sage')" title="Aesthetic Sage"></button>
-      <button class="theme-btn btn-sakura" onclick="setTheme('theme-sakura')" title="Sakura Pink"></button>
-    </div>
-  </div>
+    <!-- ===========================
+            CLOCK
+    ============================ -->
 
-  <!-- Master Clock Container -->
-  <div class="clock-container">
-    <!-- Hours Group -->
-    <div class="flip-group">
-      <div class="flip-card" id="hours-tensor">
-        <div class="top">0</div>
-        <div class="bottom">0</div>
-      </div>
-      <div class="flip-card" id="hours-unit">
-        <div class="top">0</div>
-        <div class="bottom">0</div>
-      </div>
-    </div>
+    <main
+        class="clock-container"
+        role="timer"
+        aria-live="polite"
+    >
 
-    <div class="colon">:</div>
+        <!-- HOURS -->
 
-    <!-- Minutes Group -->
-    <div class="flip-group">
-      <div class="flip-card" id="minutes-tensor">
-        <div class="top">0</div>
-        <div class="bottom">0</div>
-      </div>
-      <div class="flip-card" id="minutes-unit">
-        <div class="top">0</div>
-        <div class="bottom">0</div>
-      </div>
-    </div>
+        <div class="flip-group">
 
-    <div class="colon">:</div>
+            <div class="flip-card" id="hours-tensor">
+                <div class="top">0</div>
+                <div class="bottom">0</div>
+            </div>
 
-    <!-- Seconds Group -->
-    <div class="flip-group">
-      <div class="flip-card" id="seconds-tensor">
-        <div class="top">0</div>
-        <div class="bottom">0</div>
-      </div>
-      <div class="flip-card" id="seconds-unit">
-        <div class="top">0</div>
-        <div class="bottom">0</div>
-      </div>
-    </div>
+            <div class="flip-card" id="hours-unit">
+                <div class="top">0</div>
+                <div class="bottom">0</div>
+            </div>
 
-    <!-- AM/PM Indicator Card (Hidden in 24h mode) -->
-    <div class="ampm-card" id="ampm-indicator">AM</div>
-  </div>
+        </div>
 
-  <script src="script.js"></script>
+        <div class="colon" aria-hidden="true">:</div>
+
+        <!-- MINUTES -->
+
+        <div class="flip-group">
+
+            <div class="flip-card" id="minutes-tensor">
+                <div class="top">0</div>
+                <div class="bottom">0</div>
+            </div>
+
+            <div class="flip-card" id="minutes-unit">
+                <div class="top">0</div>
+                <div class="bottom">0</div>
+            </div>
+
+        </div>
+
+        <div class="colon" aria-hidden="true">:</div>
+
+        <!-- SECONDS -->
+
+        <div class="flip-group">
+
+            <div class="flip-card" id="seconds-tensor">
+                <div class="top">0</div>
+                <div class="bottom">0</div>
+            </div>
+
+            <div class="flip-card" id="seconds-unit">
+                <div class="top">0</div>
+                <div class="bottom">0</div>
+            </div>
+
+        </div>
+
+        <!-- AM / PM -->
+
+        <div
+            class="ampm-card"
+            id="ampm-indicator"
+            aria-live="polite"
+        >
+            AM
+        </div>
+
+    </main>
+
+    <!-- JavaScript -->
+
+    <script src="script.js" defer></script>
+
 </body>
 </html>
