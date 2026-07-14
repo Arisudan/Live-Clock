@@ -1,1632 +1,470 @@
-/* =========================================================
+/* ============================================
    Live Flip Clock
-   Author : Arisudan
-   ========================================================= */
+   Author: Arisudan
+   ============================================ */
 
+/* ---------- Theme Variables ---------- */
 
-/* =========================================================
-   CSS VARIABLES
-   ========================================================= */
-
-:root{
-
-    --transition:0.35s ease;
-
-    --radius-small:12px;
-    --radius-medium:18px;
-    --radius-large:30px;
-
-    --shadow-light:
-        0 6px 18px rgba(0,0,0,.08);
-
-    --shadow-medium:
-        0 15px 40px rgba(0,0,0,.16);
-
-    --shadow-heavy:
-        0 25px 60px rgba(0,0,0,.22);
-
+.theme-dark {
+  --bg: #0b0b0c;
+  --card-bg: #18181a;
+  --text: #ffffff;
+  --accent: #2a2a2c;
+  --border: rgba(255, 255, 255, 0.05);
+  --shadow: rgba(0, 0, 0, 0.5);
+  --ring: rgba(255, 255, 255, 0.35);
+  --control-bg: rgba(255, 255, 255, 0.06);
 }
 
-/* ===========================
-   DARK
-=========================== */
-
-.theme-dark{
-
-    --background:#111111;
-
-    --card:#1d1d1f;
-
-    --text:#f6f6f7;
-
-    --divider:#2f2f31;
-
-    --toolbar:rgba(255,255,255,.06);
-
+.theme-light {
+  --bg: #f2f2f7;
+  --card-bg: #ffffff;
+  --text: #1d1d1f;
+  --accent: #e5e5ea;
+  --border: rgba(0, 0, 0, 0.06);
+  --shadow: rgba(0, 0, 0, 0.15);
+  --ring: rgba(0, 0, 0, 0.18);
+  --control-bg: rgba(0, 0, 0, 0.04);
 }
 
-/* ===========================
-   LIGHT
-=========================== */
-
-.theme-light{
-
-    --background:#f4f4f5;
-
-    --card:#ffffff;
-
-    --text:#191919;
-
-    --divider:#dddddd;
-
-    --toolbar:rgba(255,255,255,.70);
-
+.theme-sage {
+  --bg: #e2e8e4;
+  --card-bg: #ffffff;
+  --text: #4a5d4e;
+  --accent: #cbd5ce;
+  --border: rgba(74, 93, 78, 0.08);
+  --shadow: rgba(74, 93, 78, 0.18);
+  --ring: rgba(74, 93, 78, 0.3);
+  --control-bg: rgba(0, 0, 0, 0.04);
 }
 
-/* ===========================
-   SAGE
-=========================== */
-
-.theme-sage{
-
-    --background:#dde5df;
-
-    --card:#ffffff;
-
-    --text:#4d6355;
-
-    --divider:#cad4cb;
-
-    --toolbar:rgba(255,255,255,.65);
-
+.theme-sakura {
+  --bg: #fae8eb;
+  --card-bg: #ffffff;
+  --text: #bd808a;
+  --accent: #f3d1d6;
+  --border: rgba(189, 128, 138, 0.08);
+  --shadow: rgba(189, 128, 138, 0.18);
+  --ring: rgba(189, 128, 138, 0.3);
+  --control-bg: rgba(0, 0, 0, 0.04);
 }
 
-/* ===========================
-   SAKURA
-=========================== */
-
-.theme-sakura{
-
-    --background:#fae8eb;
-
-    --card:#ffffff;
-
-    --text:#ba7a85;
-
-    --divider:#efd3d8;
-
-    --toolbar:rgba(255,255,255,.70);
-
-}
-
-/* =========================================================
-   RESET
-   ========================================================= */
+/* ---------- Reset ---------- */
 
 *,
 *::before,
-*::after{
-
-    margin:0;
-    padding:0;
-
-    box-sizing:border-box;
-
-}
-
-html{
-
-    font-size:16px;
-
-    scroll-behavior:smooth;
-
-}
-
-body{
-
-    min-height:100vh;
-
-    background:var(--background);
-
-    color:var(--text);
-
-    font-family:
-
-    "Inter",
-
-    "Segoe UI",
-
-    Helvetica,
-
-    Arial,
-
-    sans-serif;
-
-    transition:
-
-    background var(--transition),
-
-    color var(--transition);
-
-    overflow:hidden;
-
-}
-
-/* =========================================================
-   PAGE
-   ========================================================= */
-
-.page{
-
-    width:100%;
-
-    min-height:100vh;
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:flex-start;
-
-    align-items:center;
-
-    padding:
-
-    50px
-
-    30px
-
-    30px;
-
-}
-
-/* =========================================================
-   TOOLBAR
-   ========================================================= */
-
-.toolbar{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    gap:30px;
-
-    padding:
-
-    14px
-
-    26px;
-
-    background:var(--toolbar);
-
-    backdrop-filter:blur(18px);
-
-    -webkit-backdrop-filter:blur(18px);
-
-    border-radius:999px;
-
-    box-shadow:var(--shadow-light);
-
-    margin-bottom:70px;
-
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-
-/* =========================================================
-   LEFT
-   ========================================================= */
+
+html,
+body {
+  height: 100%;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* ---------- Utilities ---------- */
 
-.toolbar-left{
-
-    display:flex;
-
-    align-items:center;
-
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
-
-/* =========================================================
-   RIGHT
-   ========================================================= */
 
-.toolbar-right{
+/* ---------- Base ---------- */
 
-    display:flex;
-
-    align-items:center;
-
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: clamp(24px, 5vh, 55px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition: background 0.35s ease, color 0.35s ease;
 }
-
-/* =========================================================
-   TOGGLE
-   ========================================================= */
-
-.toggle-group{
 
-    display:flex;
+/* ---------- Controls Panel ---------- */
 
-    align-items:center;
-
-    gap:14px;
-
+.controls-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 2.5vw, 22px);
+  padding: clamp(12px, 1.5vw, 14px) clamp(18px, 3vw, 28px);
+  border-radius: 50px;
+  background: var(--control-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  margin-bottom: clamp(30px, 6vh, 65px);
+  z-index: 100;
 }
-
-.toggle-title{
-
-    font-size:.95rem;
 
-    font-weight:600;
-
-    color:var(--text);
-
+.toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
-
-/* =========================================================
-   SWITCH
-   ========================================================= */
-
-.switch{
 
-    position:relative;
-
-    width:54px;
-
-    height:28px;
-
+.toggle-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
-
-.switch input{
 
-    display:none;
+/* Switch / Toggle */
 
+.switch {
+  position: relative;
+  width: 50px;
+  height: 26px;
 }
-
-.slider{
-
-    position:absolute;
-
-    inset:0;
-
-    background:#bdbdbd;
 
-    border-radius:999px;
-
-    cursor:pointer;
-
-    transition:all .30s ease;
-
+.switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
-
-.slider::before{
-
-    content:"";
-
-    position:absolute;
-
-    width:22px;
-
-    height:22px;
 
-    left:3px;
-
-    top:3px;
-
-    border-radius:50%;
-
-    background:white;
-
-    transition:.30s;
-
+.switch__track {
+  position: absolute;
+  inset: 0;
+  border-radius: 30px;
+  background: #bdbdbd;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
-
-input:checked+.slider{
 
-    background:#2da44e;
-
+.switch__track::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 3px;
+  bottom: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
 }
-
-input:checked+.slider::before{
 
-    transform:translateX(26px);
-
+input:checked + .switch__track {
+  background: #2da44e;
 }
-
-/* =========================================================
-   THEME PICKER
-   ========================================================= */
-
-.theme-picker{
-
-    display:flex;
 
-    align-items:center;
-
-    gap:12px;
-
+input:checked + .switch__track::before {
+  transform: translateX(24px);
 }
-
-/* =========================================================
-   THEME BUTTON
-   ========================================================= */
-
-.theme-btn{
 
-    width:26px;
+/* ---------- Theme Picker ---------- */
 
-    height:26px;
-
-    border:none;
-
-    border-radius:50%;
-
-    cursor:pointer;
-
-    transition:
-
-    transform .25s,
-
-    box-shadow .25s;
-
+.theme-picker {
+  display: flex;
+  gap: 12px;
 }
-
-.theme-btn:hover{
 
-    transform:scale(1.15);
-
+.theme-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-
-.theme-btn.active{
-
-    transform:scale(1.18);
-
-    box-shadow:
 
-    0 0 0 3px rgba(255,255,255,.40);
+.theme-btn:hover {
+  transform: scale(1.12);
+}
 
+.theme-btn.active {
+  transform: scale(1.18);
+  box-shadow: 0 0 0 3px var(--ring);
 }
 
-.btn-dark{
+.theme-btn--dark { background: #121212; }
+.theme-btn--light { background: #fff; border: 1px solid #bbb; }
+.theme-btn--sage { background: #91a897; }
+.theme-btn--sakura { background: #ebb3bf; }
+
+/* ---------- Clock Wrapper ---------- */
 
-    background:#111111;
-
+.clock-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+/* ---------- Clock Container ---------- */
+
+.clock-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(8px, 2vw, 28px);
+  width: min(94vw, 1200px);
 }
-
-.btn-light{
-
-    background:#ffffff;
-
-    border:1px solid #cccccc;
 
+.flip-group {
+  display: flex;
+  gap: clamp(4px, 1vw, 12px);
+}
+
+/* ---------- Colon ---------- */
+
+.colon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(50px, 8vw, 125px);
+  font-weight: 700;
+  line-height: 1;
+  padding-bottom: 8px;
+  animation: blink 1s step-end infinite;
+  user-select: none;
 }
 
-.btn-sage{
+/* ---------- Flip Card ---------- */
 
-    background:#8ea291;
-
+.flip-card {
+  position: relative;
+  width: clamp(60px, 11vw, 120px);
+  height: clamp(90px, 17vw, 180px);
+  background: var(--card-bg);
+  border-radius: clamp(10px, 1.5vw, 16px);
+  color: var(--text);
+  font-size: clamp(48px, 8vw, 105px);
+  font-weight: 800;
+  perspective: 600px;
+  box-shadow: 0 20px 45px var(--shadow);
+  border: 1px solid var(--border);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.35s ease;
+  transform: translateZ(0);
+}
+
+/* Divider line */
+.flip-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.12);
+  z-index: 5;
+  pointer-events: none;
 }
-
-.btn-sakura{
 
-    background:#ebb2bf;
+/* ---- Flip Card Halves ---- */
 
+.flip-card__top-back,
+.flip-card__top-front,
+.flip-card__bottom-back,
+.flip-card__bottom-front {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--card-bg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+  transition: background 0.35s ease;
 }
-
-/* =========================================================
-   CLOCK WRAPPER
-   ========================================================= */
-
-.clock-wrapper{
-
-    width:100%;
-
-    flex:1;
-
-    display:flex;
-
-    justify-content:center;
 
-   /* =========================================================
-   CLOCK CONTAINER
-========================================================= */
-
-.clock-container{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    gap:22px;
-
-    width:100%;
-
-    max-width:1400px;
-
+/* Top halves */
+.flip-card__top-back,
+.flip-card__top-front {
+  top: 0;
+  align-items: flex-end;
+  padding-bottom: 3px;
+  transform-origin: bottom center;
+  border-radius: clamp(10px, 1.5vw, 16px) clamp(10px, 1.5vw, 16px) 0 0;
+  border-bottom: 1px solid var(--border);
 }
 
-/* =========================================================
-   DIGIT GROUP
-========================================================= */
-
-.digit-group{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    gap:10px;
-
+/* Bottom halves */
+.flip-card__bottom-back,
+.flip-card__bottom-front {
+  bottom: 0;
+  align-items: flex-start;
+  padding-top: 3px;
+  transform-origin: top center;
+  border-radius: 0 0 clamp(10px, 1.5vw, 16px) clamp(10px, 1.5vw, 16px);
+  border-top: 1px solid var(--border);
 }
-
-/* =========================================================
-   SEPARATOR (:)
-========================================================= */
-
-.separator{
 
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    width:28px;
-
-    font-size:clamp(60px,7vw,115px);
-
-    font-weight:700;
-
-    color:var(--text);
-
-    line-height:1;
-
-    user-select:none;
-
-    animation:blink 1s infinite;
-
+/* Span reset */
+.flip-card span {
+  display: block;
+  line-height: 1;
 }
-
-/* =========================================================
-   FLIP CARD
-========================================================= */
-
-.flip-card{
-
-    position:relative;
-
-    width:clamp(78px,10vw,130px);
-
-    height:clamp(118px,15vw,190px);
-
-    background:var(--card);
 
-    border-radius:18px;
+/* Layering */
+.flip-card__top-back { z-index: 1; }
+.flip-card__top-front { z-index: 2; }
+.flip-card__bottom-back { z-index: 1; }
+.flip-card__bottom-front { z-index: 2; }
 
-    overflow:hidden;
-
-    perspective:1200px;
-
-    transform-style:preserve-3d;
-
-    box-shadow:
-
-        var(--shadow-medium);
-
+/* Initial rotation states */
+.flip-card__top-front {
+  transform: rotateX(0deg);
 }
-
-/* =========================================================
-   DIVIDER
-========================================================= */
-
-.flip-card::after{
-
-    content:"";
 
-    position:absolute;
-
-    left:0;
-
-    top:50%;
-
-    width:100%;
-
-    height:2px;
-
-    background:var(--divider);
-
-    z-index:10;
-
+.flip-card__bottom-front {
+  transform: rotateX(90deg);
 }
-
-/* =========================================================
-   TOP + BOTTOM
-========================================================= */
 
-.flip-card .top,
-.flip-card .bottom{
+/* ---------- AM / PM ---------- */
 
-    position:absolute;
-
-    left:0;
-
-    width:100%;
-
-    height:50%;
-
-    display:flex;
-
-    justify-content:center;
-
-    overflow:hidden;
-
-    background:var(--card);
-
-    color:var(--text);
-
-    font-weight:700;
-
-    font-size:clamp(58px,7vw,100px);
-
-    backface-visibility:hidden;
-
-    -webkit-backface-visibility:hidden;
-
+.ampm-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: clamp(55px, 7vw, 80px);
+  height: clamp(42px, 5vw, 60px);
+  padding: 0 clamp(14px, 2vw, 20px);
+  background: var(--card-bg);
+  color: var(--text);
+  border-radius: 14px;
+  font-size: clamp(18px, 2.2vw, 28px);
+  font-weight: 700;
+  letter-spacing: 2px;
+  box-shadow: 0 10px 25px var(--shadow);
+  transition: background 0.35s ease, color 0.35s ease, box-shadow 0.35s ease;
 }
-
-/* =========================================================
-   TOP HALF
-========================================================= */
-
-.flip-card .top{
-
-    top:0;
 
-    align-items:flex-end;
+/* ============================================
+   Animations
+   ============================================ */
 
-    padding-bottom:3px;
-
-    border-radius:18px 18px 0 0;
-
-    transform-origin:bottom;
-
-    line-height:1.02;
-
+@keyframes flipTop {
+  0% { transform: rotateX(0deg); }
+  100% { transform: rotateX(-90deg); }
 }
-
-/* =========================================================
-   BOTTOM HALF
-========================================================= */
-
-.flip-card .bottom{
-
-    bottom:0;
-
-    align-items:flex-start;
 
-    padding-top:3px;
-
-    border-radius:0 0 18px 18px;
-
-    transform-origin:top;
-
-    line-height:.08;
-
+@keyframes flipBottom {
+  0% { transform: rotateX(90deg); }
+  100% { transform: rotateX(0deg); }
 }
-
-/* =========================================================
-   LIGHT HIGHLIGHT
-========================================================= */
-
-.flip-card::before{
-
-    content:"";
-
-    position:absolute;
 
-    top:0;
-
-    left:0;
-
-    width:100%;
-
-    height:45%;
-
-    background:
-
-        linear-gradient(
-
-            rgba(255,255,255,.10),
-
-            rgba(255,255,255,0)
-
-        );
-
-    pointer-events:none;
-
-    z-index:2;
-
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
 }
-
-/* =========================================================
-   CARD EDGE SHADOW
-========================================================= */
-
-.flip-card{
-
-    border:
-
-        1px solid
-
-        rgba(255,255,255,.03);
 
+/* Animation trigger */
+.flip-card.animate .flip-card__top-front {
+  animation: flipTop 0.18s cubic-bezier(0.4, 0, 1, 1) forwards;
+  animation-delay: var(--stagger, 0ms);
 }
 
-/* =========================================================
-   INNER SHADOW
-========================================================= */
-
-.flip-card .top{
-
-    box-shadow:
-
-        inset 0 -3px 6px rgba(0,0,0,.08);
-
+.flip-card.animate .flip-card__bottom-front {
+  animation: flipBottom 0.18s cubic-bezier(0, 0, 0.2, 1) forwards;
+  animation-delay: calc(var(--stagger, 0ms) + 0.18s);
 }
 
-.flip-card .bottom{
+/* ---------- Hover ---------- */
 
-    box-shadow:
-
-        inset 0 3px 6px rgba(255,255,255,.03);
-
+.flip-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 50px var(--shadow);
 }
-
-/* =========================================================
-   DIGIT ALIGNMENT
-========================================================= */
-
-.flip-card .top,
 
-.flip-card .bottom{
+/* ============================================
+   Responsive
+   ============================================ */
 
-    letter-spacing:-2px;
-
-    font-variant-numeric:tabular-nums;
-
+@media (max-width: 900px) {
+  body { padding-top: clamp(20px, 4vh, 40px); }
+  .controls-panel { margin-bottom: 40px; }
+  .clock-container { gap: clamp(6px, 1.5vw, 14px); }
+  .flip-group { gap: clamp(3px, 0.8vw, 8px); }
 }
-
-/* =========================================================
-   AM PM
-========================================================= */
-
-.ampm-card{
-
-    display:none;
-
-    justify-content:center;
-
-    align-items:center;
-
-    margin-left:18px;
 
-    min-width:80px;
-
-    height:58px;
-
-    background:var(--card);
-
-    color:var(--text);
-
-    border-radius:14px;
-
-    font-size:clamp(18px,2vw,26px);
-
-    font-weight:700;
-
-    letter-spacing:2px;
-
-    box-shadow:
-
-        var(--shadow-light);
-
+@media (max-width: 600px) {
+  body { padding-top: 20px; }
+  .controls-panel {
+    flex-direction: column;
+    gap: 14px;
+    padding: 14px 16px;
+    margin-bottom: 25px;
+    border-radius: 20px;
+  }
+  .clock-container { gap: 6px; }
+  .flip-group { gap: 4px; }
 }
-
-/* =========================================================
-   AM PM ACTIVE
-========================================================= */
-
-.ampm-card.show{
 
-    display:flex;
-
+@media (max-width: 380px) {
+  .controls-panel { padding: 10px 12px; gap: 10px; }
 }
-
-/* =========================================================
-   CARD HOVER
-========================================================= */
-
-.flip-card{
-
-    transition:
-
-        transform .25s ease,
 
-        box-shadow .25s ease;
+/* ============================================
+   Accessibility
+   ============================================ */
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .flip-card__top-front { transform: none !important; }
+  .flip-card__bottom-front { transform: none !important; }
+  .colon { animation: none !important; opacity: 1 !important; }
 }
-
-.flip-card:hover{
-
-    transform:
-
-        translateY(-3px);
-
-    box-shadow:
-
-        var(--shadow-heavy);
-
-}
-    align-items:flex-start;
-
-}
-/* =========================================================
-   FLIP ANIMATION ENGINE
-========================================================= */
-
-.flip-card{
-
-    transform-style:preserve-3d;
-
-    will-change:transform;
-
-}
-
-.flip-card .top,
-.flip-card .bottom{
-
-    will-change:transform;
-
-    transform-style:preserve-3d;
-
-}
-
-/* =========================================================
-   ACTIVE ANIMATION
-========================================================= */
-
-.flip-card.animate .top{
-
-    animation:
-
-        flipTop
-
-        .45s
-
-        cubic-bezier(.37,.02,.27,1)
-
-        forwards;
-
-}
-
-.flip-card.animate .bottom{
-
-    animation:
-
-        flipBottom
-
-        .45s
-
-        cubic-bezier(.23,1,.32,1)
-
-        forwards;
-
-}
-
-/* =========================================================
-   TOP FLIP
-========================================================= */
-
-@keyframes flipTop{
-
-    0%{
-
-        transform:
-
-            rotateX(0deg);
-
-        z-index:4;
-
-    }
-
-    40%{
-
-        transform:
-
-            rotateX(-40deg);
-
-    }
-
-    100%{
-
-        transform:
-
-            rotateX(-90deg);
-
-        z-index:1;
-
-    }
-
-}
-
-/* =========================================================
-   BOTTOM FLIP
-========================================================= */
-
-@keyframes flipBottom{
-
-    0%{
-
-        transform:
-
-            rotateX(90deg);
-
-        z-index:2;
-
-    }
-
-    60%{
-
-        transform:
-
-            rotateX(35deg);
-
-    }
-
-    100%{
-
-        transform:
-
-            rotateX(0deg);
-
-        z-index:4;
-
-    }
-
-}
-
-/* =========================================================
-   SHADOW DURING FLIP
-========================================================= */
-
-.flip-card.animate::before{
-
-    animation:
-
-        flipShadow
-
-        .45s
-
-        ease;
-
-}
-
-@keyframes flipShadow{
-
-    0%{
-
-        opacity:.08;
-
-    }
-
-    50%{
-
-        opacity:.22;
-
-    }
-
-    100%{
-
-        opacity:.08;
-
-    }
-
-}
-
-/* =========================================================
-   CARD APPEAR
-========================================================= */
-
-@keyframes cardAppear{
-
-    from{
-
-        opacity:0;
-
-        transform:
-
-            translateY(20px)
-
-            scale(.96);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:
-
-            translateY(0)
-
-            scale(1);
-
-    }
-
-}
-
-.flip-card{
-
-    animation:
-
-        cardAppear
-
-        .6s
-
-        ease;
-
-}
-
-/* =========================================================
-   COLON BLINK
-========================================================= */
-
-@keyframes blink{
-
-    0%{
-
-        opacity:1;
-
-    }
-
-    50%{
-
-        opacity:.20;
-
-    }
-
-    100%{
-
-        opacity:1;
-
-    }
-
-}
-
-/* =========================================================
-   TOOLBAR FADE
-========================================================= */
-
-.toolbar{
-
-    animation:
-
-        toolbarFade
-
-        .8s
-
-        ease;
-
-}
-
-@keyframes toolbarFade{
-
-    from{
-
-        opacity:0;
-
-        transform:
-
-            translateY(-25px);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:
-
-            translateY(0);
-
-    }
-
-}
-
-/* =========================================================
-   CLOCK FADE
-========================================================= */
-
-.clock-container{
-
-    animation:
-
-        clockFade
-
-        .8s
-
-        ease;
-
-}
-
-@keyframes clockFade{
-
-    from{
-
-        opacity:0;
-
-        transform:
-
-            scale(.96);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:
-
-            scale(1);
-
-    }
-
-}
-
-/* =========================================================
-   THEME TRANSITIONS
-========================================================= */
-
-body,
-
-.flip-card,
-
-.toolbar,
-
-.ampm-card,
-
-.separator,
-
-.slider{
-
-    transition:
-
-        background-color .35s ease,
-
-        color .35s ease,
-
-        border-color .35s ease,
-
-        box-shadow .35s ease;
-
-}
-
-/* =========================================================
-   BUTTON ANIMATION
-========================================================= */
-
-.theme-btn{
-
-    transition:
-
-        transform .25s,
-
-        box-shadow .25s,
-
-        border-color .25s;
-
-}
-
-.theme-btn:active{
-
-    transform:
-
-        scale(.92);
-
-}
-
-/* =========================================================
-   AM PM ANIMATION
-========================================================= */
-
-.ampm-card{
-
-    transition:
-
-        opacity .3s ease,
-
-        transform .3s ease;
-
-}
-
-.ampm-card.show{
-
-    display:flex;
-
-    animation:
-
-        amFade
-
-        .3s
-
-        ease;
-
-}
-
-@keyframes amFade{
-
-    from{
-
-        opacity:0;
-
-        transform:
-
-            translateY(8px);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:
-
-            translateY(0);
-
-    }
-
-}
-
-/* =========================================================
-   HOVER EFFECTS
-========================================================= */
-
-.flip-card:hover{
-
-    transform:
-
-        translateY(-4px)
-
-        scale(1.015);
-
-}
-
-.theme-btn:hover{
-
-    transform:
-
-        scale(1.18);
-
-}
-
-.switch:hover .slider{
-
-    filter:
-
-        brightness(1.05);
-
-}
-
-/* =========================================================
-   PERFORMANCE
-========================================================= */
-
-.flip-card,
-
-.separator,
-
-.theme-btn,
-
-.slider,
-
-.ampm-card{
-
-    backface-visibility:hidden;
-
-    -webkit-backface-visibility:hidden;
-
-    transform:translateZ(0);
-
-}
-
-/* =========================================================
-   REDUCED MOTION SUPPORT
-========================================================= */
-
-@media (prefers-reduced-motion:reduce){
-
-*{
-
-animation:none !important;
-
-transition:none !important;
-
-scroll-behavior:auto !important;
-
-}
-
-}
-/* =========================================================
-   RESPONSIVE DESIGN
-========================================================= */
-
-/* ---------- Large Desktop ---------- */
-
-@media (min-width:1600px){
-
-    .clock-container{
-
-        gap:32px;
-
-    }
-
-    .digit-group{
-
-        gap:14px;
-
-    }
-
-}
-
-/* ---------- Desktop ---------- */
-
-@media (max-width:1400px){
-
-    .clock-container{
-
-        gap:20px;
-
-    }
-
-}
-
-/* ---------- Laptop ---------- */
-
-@media (max-width:1200px){
-
-    .toolbar{
-
-        margin-bottom:55px;
-
-    }
-
-    .clock-container{
-
-        gap:16px;
-
-    }
-
-    .digit-group{
-
-        gap:8px;
-
-    }
-
-}
-
-/* ---------- Tablet ---------- */
-
-@media (max-width:900px){
-
-    .page{
-
-        padding:
-
-        40px
-
-        20px
-
-        20px;
-
-    }
-
-    .toolbar{
-
-        padding:
-
-        12px
-
-        22px;
-
-        gap:20px;
-
-        margin-bottom:40px;
-
-    }
-
-    .toggle-title{
-
-        font-size:.90rem;
-
-    }
-
-    .clock-container{
-
-        gap:12px;
-
-    }
-
-    .digit-group{
-
-        gap:6px;
-
-    }
-
-    .ampm-card{
-
-        min-width:68px;
-
-        height:48px;
-
-        margin-left:10px;
-
-    }
-
-}
-
-/* ---------- Mobile ---------- */
-
-@media (max-width:600px){
-
-    .page{
-
-        padding:
-
-        25px
-
-        12px
-
-        20px;
-
-    }
-
-    .toolbar{
-
-        width:100%;
-
-        border-radius:22px;
-
-        flex-direction:column;
-
-        gap:18px;
-
-        padding:18px;
-
-        margin-bottom:30px;
-
-    }
-
-    .toolbar-left,
-
-    .toolbar-right{
-
-        justify-content:center;
-
-        width:100%;
-
-    }
-
-    .clock-container{
-
-        gap:8px;
-
-    }
-
-    .digit-group{
-
-        gap:4px;
-
-    }
-
-    .separator{
-
-        width:16px;
-
-        font-size:clamp(34px,7vw,55px);
-
-    }
-
-    .ampm-card{
-
-        min-width:52px;
-
-        height:40px;
-
-        font-size:16px;
-
-        margin-left:4px;
-
-    }
-
-}
-
-/* ---------- Small Phones ---------- */
-
-@media (max-width:420px){
-
-    .toolbar{
-
-        transform:scale(.92);
-
-        transform-origin:center;
-
-    }
-
-    .clock-container{
-
-        transform:scale(.90);
-
-        transform-origin:center;
-
-    }
-
-}
-
-/* ---------- Tiny Devices ---------- */
-
-@media (max-width:360px){
-
-    .toolbar{
-
-        transform:scale(.82);
-
-    }
-
-    .clock-container{
-
-        transform:scale(.82);
-
-    }
-
-}
-
-/* ---------- Landscape Phones ---------- */
-
-@media (max-height:500px){
-
-    .page{
-
-        justify-content:center;
-
-    }
-
-    .toolbar{
-
-        margin-bottom:18px;
-
-    }
-
-}
-
-/* =========================================================
-   ACCESSIBILITY
-========================================================= */
 
 .theme-btn:focus-visible,
-
-.switch input:focus-visible + .slider{
-
-    outline:3px solid #4a90ff;
-
-    outline-offset:4px;
-
+.switch input:focus-visible + .switch__track {
+  outline: 3px solid #4da3ff;
+  outline-offset: 3px;
 }
 
-button{
+/* ============================================
+   Scrollbar
+   ============================================ */
 
-    font:inherit;
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb { background: #888; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #666; }
+* { scrollbar-width: thin; scrollbar-color: #888 transparent; }
 
-}
+/* ============================================
+   Selection
+   ============================================ */
 
-button:disabled{
-
-    opacity:.5;
-
-    cursor:not-allowed;
-
-}
-
-/* =========================================================
-   TEXT SELECTION
-========================================================= */
-
-::selection{
-
-    background:rgba(100,149,237,.30);
-
-    color:inherit;
-
-}
-
-/* =========================================================
-   SCROLLBAR
-========================================================= */
-
-::-webkit-scrollbar{
-
-    width:10px;
-
-}
-
-::-webkit-scrollbar-track{
-
-    background:transparent;
-
-}
-
-::-webkit-scrollbar-thumb{
-
-    background:#8c8c8c;
-
-    border-radius:20px;
-
-}
-
-::-webkit-scrollbar-thumb:hover{
-
-    background:#666;
-
-}
-
-/* =========================================================
-   IMAGE SAFETY
-========================================================= */
-
-img{
-
-    max-width:100%;
-
-    display:block;
-
-}
-
-/* =========================================================
-   LINKS
-========================================================= */
-
-a{
-
-    color:inherit;
-
-    text-decoration:none;
-
-}
-
-/* =========================================================
-   PRINT
-========================================================= */
-
-@media print{
-
-    body{
-
-        background:white;
-
-        color:black;
-
-    }
-
-    .toolbar{
-
-        display:none;
-
-    }
-
-}
-
-/* =========================================================
-   END OF FILE
-========================================================= */
+::selection { background: rgba(100, 149, 237, 0.35); }
